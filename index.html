@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>서상호 게임 기획 포트폴리오</title>
+<style>
+  /* ===== INSPECTOR Brand System ===== */
+  :root{
+    --charcoal:#1A1C1E;      /* Carbon Charcoal */
+    --charcoal-2:#26292c;
+    --kraft:#D2C4A7;         /* Manila Kraft */
+    --kraft-light:#F3EEE2;
+    --paper:#FBF8F1;
+    --green:#0E8B45;         /* refined phosphor green (print-safe) */
+    --green-bright:#00FF66;  /* accent only */
+    --ink:#1A1C1E;
+    --muted:#6c6457;
+    --line:#cdbfa3;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  body{
+    font-family:"Apple SD Gothic Neo","Helvetica Neue",Arial,sans-serif;
+    color:var(--ink);
+    background:var(--paper);
+    line-height:1.6;
+    font-size:10.5pt;
+    word-break:keep-all;       /* 한글: 단어(띄어쓰기) 단위로만 줄바꿈 */
+    overflow-wrap:break-word;  /* 단, 아주 긴 영문/토큰은 필요시 분리 */
+  }
+  .mono{font-family:"SF Mono",Menlo,Consolas,monospace;}
+
+  @page{ size:A4 landscape; margin:0; }
+
+  .page{
+    position:relative;
+    width:297mm;
+    height:210mm;
+    padding:13mm 18mm 12mm 18mm;
+    overflow:hidden;
+    page-break-after:always;
+    background:var(--paper);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;   /* 가로: 본문을 세로 중앙 정렬해 빈 공간 균형 */
+  }
+  .page:last-child{page-break-after:auto;}
+  /* 절대배치 자식(러닝헤더/풋터/스탬프)은 플렉스 영향 없음 */
+
+  /* faint grid background */
+  .grid-bg::before{
+    content:"";position:absolute;inset:0;
+    background-image:linear-gradient(rgba(26,28,30,.035) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(26,28,30,.035) 1px,transparent 1px);
+    background-size:8mm 8mm;pointer-events:none;
+  }
+
+  /* corner brackets */
+  .brackets::before,.brackets::after{
+    content:"";position:absolute;width:14mm;height:14mm;border:1.5px solid var(--charcoal);
+  }
+  .brackets::before{top:8mm;left:8mm;border-right:none;border-bottom:none;}
+  .brackets::after{bottom:8mm;right:8mm;border-left:none;border-top:none;}
+
+  /* running header / footer */
+  .run-head{position:absolute;top:8mm;left:24mm;right:24mm;display:flex;justify-content:space-between;
+    font-family:"SF Mono",Menlo,monospace;font-size:7pt;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;}
+  .run-foot{position:absolute;bottom:8mm;left:24mm;right:24mm;display:flex;justify-content:space-between;
+    font-family:"SF Mono",Menlo,monospace;font-size:7pt;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;}
+  /* auto page numbering — counts every .page; footers render number via .pageno */
+  body{counter-reset:pageno;}
+  .page{counter-increment:pageno;}
+  .pageno::before{content:counter(pageno,decimal-leading-zero);}
+
+  .tag{display:inline-block;font-family:"SF Mono",Menlo,monospace;font-size:7.5pt;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--green);border:1px solid var(--green);
+    padding:2px 8px;border-radius:2px;}
+  .tag-dark{color:var(--kraft);border-color:var(--kraft);}
+
+  h1{font-size:30pt;font-weight:800;letter-spacing:-.01em;line-height:1.1;}
+  h2{font-size:19pt;font-weight:800;letter-spacing:-.01em;margin-bottom:2mm;}
+  h3{font-size:12.5pt;font-weight:700;margin-bottom:1.5mm;}
+  p{margin-bottom:2mm;}
+  .lead{font-size:11.5pt;color:var(--charcoal-2);}
+  .muted{color:var(--muted);}
+  .sec-no{font-family:"SF Mono",Menlo,monospace;color:var(--green);font-weight:700;font-size:11pt;letter-spacing:.1em;}
+
+  .sec-title{display:flex;align-items:baseline;gap:6mm;border-bottom:2px solid var(--charcoal);
+    padding-bottom:3mm;margin-bottom:6mm;}
+  .sec-title .en{margin-left:auto;font-family:"SF Mono",Menlo,monospace;font-size:8pt;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--muted);}
+
+  /* cards */
+  .card{background:#fff;border:1px solid var(--line);border-radius:3px;padding:5mm;}
+  .card-kraft{background:var(--kraft-light);border:1px solid var(--line);}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:5mm;}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4mm;}
+  .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:3mm;}
+
+  table{width:100%;border-collapse:collapse;font-size:9.5pt;}
+  th,td{text-align:left;padding:2.6mm 3mm;border-bottom:1px solid var(--line);vertical-align:top;}
+  th{font-family:"SF Mono",Menlo,monospace;font-size:8pt;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--muted);border-bottom:1.5px solid var(--charcoal);}
+  .keycol{font-family:"SF Mono",Menlo,monospace;font-size:8.5pt;color:var(--green);white-space:nowrap;}
+
+  ul.clean{list-style:none;}
+  ul.clean li{position:relative;padding-left:6mm;margin-bottom:1.6mm;}
+  ul.clean li::before{content:"▸";position:absolute;left:0;color:var(--green);font-weight:700;}
+
+  .chip{display:inline-block;background:var(--charcoal);color:var(--kraft);font-family:"SF Mono",Menlo,monospace;
+    font-size:8pt;letter-spacing:.06em;padding:2.5px 8px;border-radius:2px;margin:0 2px 4px 0;}
+  .chip-out{background:transparent;color:var(--charcoal);border:1px solid var(--charcoal);}
+
+  .stamp{position:absolute;font-family:"SF Mono",Menlo,monospace;font-weight:700;letter-spacing:.1em;
+    border:2.5px solid var(--green);color:var(--green);padding:3px 10px;border-radius:3px;
+    transform:rotate(-9deg);font-size:11pt;opacity:.85;}
+
+  .redact{background:var(--charcoal);color:var(--charcoal);border-radius:1px;padding:0 4px;}
+
+  /* DARK pages (cover / dividers) */
+  .dark{background:var(--charcoal);color:var(--kraft-light);}
+  .dark .run-head,.dark .run-foot{color:#7d756a;}
+  .dark .brackets::before,.dark .brackets::after{border-color:var(--kraft);}
+  .dark.grid-bg::before{
+    background-image:linear-gradient(rgba(210,196,167,.06) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(210,196,167,.06) 1px,transparent 1px);}
+  .scan{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,255,102,.04) 0 1px,transparent 1px 4px);pointer-events:none;}
+
+  .metric{font-family:"SF Mono",Menlo,monospace;}
+  .metric .num{font-size:22pt;font-weight:800;color:var(--charcoal);display:block;line-height:1;}
+  .dark .metric .num{color:var(--green-bright);}
+  .metric .lbl{font-size:7.5pt;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+
+  .flow{display:flex;align-items:stretch;gap:0;font-family:"SF Mono",Menlo,monospace;font-size:8pt;}
+  .flow .step{flex:1;background:var(--kraft-light);border:1px solid var(--line);padding:3mm 2mm;text-align:center;}
+  .flow .arr{display:flex;align-items:center;color:var(--green);font-weight:700;padding:0 1.5mm;}
+
+  .timeline{font-size:8.3pt;}
+  .timeline .row{display:flex;gap:3mm;padding:1.6mm 0;border-bottom:1px dotted var(--line);white-space:nowrap;}
+  .timeline .when{font-family:"SF Mono",Menlo,monospace;color:var(--green);width:21mm;flex:none;font-size:7.8pt;}
+
+  .small{font-size:8.5pt;}
+  .label{font-family:"SF Mono",Menlo,monospace;font-size:7.5pt;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+  .swatch{height:16mm;border-radius:3px;border:1px solid var(--line);margin-bottom:2mm;}
+</style>
+</head>
+<body>
+
+<!-- ============ PAGE 1 · COVER ============ -->
+<section class="page dark grid-bg brackets">
+  <div class="scan"></div>
+  <div class="run-head"><span>INSPECTORATE · PORTFOLIO FILE</span><span>2026</span></div>
+
+  <div style="max-width:235mm;">
+    <span class="tag tag-dark">GAME · SYSTEM PLANNER · 게임 · 시스템 기획</span>
+    <h1 style="margin-top:11mm;color:#fff;font-size:54pt;line-height:1;">서상호<span style="color:var(--green-bright);">.</span></h1>
+    <p class="mono" style="color:var(--kraft);letter-spacing:.22em;margin-top:4mm;font-size:11pt;">SEO SANGHO &nbsp;/&nbsp; GAME &amp; SYSTEM PLANNING PORTFOLIO</p>
+
+    <div style="margin-top:14mm;">
+      <p style="font-size:19pt;line-height:1.45;color:#fff;font-weight:600;">
+        게임에서 출발해, <span style="color:var(--green-bright);">도메인</span>을 넘나들며 <span style="color:var(--green-bright);">시스템</span>을 설계하는 기획자
+      </p>
+      <p class="muted" style="margin-top:6mm;font-size:10.5pt;line-height:1.7;max-width:170mm;">
+        게임·보안·AI·IoT·웹까지, 분야는 달라도
+        <span style="color:var(--kraft);">‘문제 정의 → 시스템 설계 → 검증’</span>이라는 한 가지 방식으로 기획합니다.
+      </p>
+    </div>
+  </div>
+
+  <div style="position:absolute;bottom:20mm;left:16mm;right:16mm;display:flex;justify-content:space-between;align-items:flex-end;">
+    <div class="mono small" style="color:var(--kraft);line-height:1.9;">
+      영남이공대학교 소프트웨어융합과<br>
+      hirasawa224@gmail.com
+    </div>
+    <div class="mono small" style="color:#7d756a;text-align:right;letter-spacing:.1em;">
+      OPEN THE DOOR.<br>MANAGE THE ANOMALY.
+    </div>
+  </div>
+</section>
+
+<!-- ============ PAGE 2 · ABOUT + CONTENTS ============ -->
+<section class="page grid-bg brackets">
+  <div class="run-head"><span>FILE 00 · PROFILE</span><span>서상호 PORTFOLIO</span></div>
+
+  <div class="sec-title"><span class="sec-no">00</span><h2>About Me</h2><span class="en">PROFILE / 자기소개</span></div>
+
+  <div class="grid2" style="gap:7mm;align-items:start;">
+    <div>
+      <p class="lead" style="margin-bottom:4mm;">
+        “복잡한 룰보다, 단순한 규칙 속 깊이 있는 플레이를.”
+      </p>
+      <p>
+        소프트웨어융합과에서 프로그래밍을 배우며 자연스럽게 <b>게임을 ‘만드는 사람’</b>이 되었습니다.
+        단순히 코드를 짜는 것을 넘어, <b>어떤 규칙이 재미를 만드는가</b>를 고민하는 과정에서 게임 기획에 매료되었습니다.
+      </p>
+      <p>
+        캡스톤에서 3인 팀의 <b>팀장이자 기획 총괄</b>로 신작 「괴이탐사국: INSPECTOR」를 이끌었고,
+        나아가 <b>보안(피싱 필터)·AI(고령층 음성 에이전트)·IoT(충전 스테이션)·웹(도서관)</b>까지
+        분야를 가리지 않고 직접 시스템을 기획했습니다.
+      </p>
+      <p>
+        강점은 한 분야의 깊이보다 <b>‘문제 정의 → 시스템 설계 → 검증’이라는 한 방식을 여러 도메인에 적용하는 폭</b>입니다.
+        기술을 알기에 개발자와 같은 언어로 소통하며 <b>실현 가능한 기획</b>을 만듭니다.
+      </p>
+    </div>
+
+    <div>
+      <div class="card-kraft card" style="margin-bottom:5mm;">
+        <div class="label" style="margin-bottom:3mm;">CORE STRENGTHS · 핵심 역량</div>
+        <ul class="clean small">
+          <li><b>도메인 불문 시스템 기획</b> — 게임·보안·AI·IoT·웹, 문제를 규칙·데이터로 분해·설계</li>
+          <li><b>게임 기획·밸런스</b> — 장르 융합, 코어 루프, 데이터 주도(SO/JSON) 확률 통제</li>
+          <li><b>브랜딩 · 디렉팅</b> — 세계관·톤앤매너·UX/오디오 시스템 정의</li>
+          <li><b>협업 · PM</b> — 팀장, 간트 일정관리, Git 기반 협업</li>
+        </ul>
+      </div>
+
+      <div class="grid3" style="gap:3mm;text-align:center;">
+        <div class="card"><span class="metric"><span class="num">6</span><span class="lbl">수록 프로젝트</span></span></div>
+        <div class="card"><span class="metric"><span class="num">10+</span><span class="lbl">수상 · 선정</span></span></div>
+        <div class="card"><span class="metric"><span class="num">15+</span><span class="lbl">교육 수료</span></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-title" style="margin-top:9mm;"><span class="sec-no">—</span><h2 style="font-size:15pt;">Contents</h2><span class="en">목차</span></div>
+  <div class="grid2 mono small" style="gap:2mm 10mm;">
+    <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">01</span> &nbsp;Skills &amp; Tools · 보유 역량</span><span class="muted">p.03</span></div>
+    <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">MAP</span> Project Map · 프로젝트 맵</span><span class="muted">p.04</span></div>
+    <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">04</span> &nbsp;Awards · 수상·선정 내역</span><span class="muted">p.16</span></div>
+    <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">02</span> &nbsp;Project · 괴이탐사국 INSPECTOR</span><span class="muted">p.05</span></div>
+    <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">05</span> &nbsp;Certificates · 교육·자격</span><span class="muted">p.17</span></div>
+    <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">02.A</span> In-Game Screens · 게임 화면</span><span class="muted">p.09</span></div>
+    <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">06</span> &nbsp;Activities &amp; Global · 활동</span><span class="muted">p.18</span></div>
+    <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">07</span> &nbsp;Work Experience · 경력</span><span class="muted">p.19</span></div>
+    <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">02.B</span> Brand Guideline · 브랜드 기획</span><span class="muted">p.10</span></div>
+    <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">08</span> &nbsp;Self-Study · 자기주도 학습</span><span class="muted">p.20</span></div>
+    <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">03</span> &nbsp;Project · 피싱 필터 <span class="muted">(2026 동상)</span></span><span class="muted">p.11</span></div>
+    <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">03.A</span> Problem &amp; Visuals · 피싱 자료</span><span class="muted">p.13</span></div>
+    <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">A</span> &nbsp;&nbsp;Appendix · 수상 증빙</span><span class="muted">p.21</span></div>
+    <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">03.B</span> Selected Projects · 도메인 시스템 기획</span><span class="muted">p.14</span></div>
+    <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">B</span> &nbsp;&nbsp;Appendix · 교육·자격 증빙</span><span class="muted">p.22</span></div>
+  </div>
+
+  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+</section>
+
+<!-- ============ PAGE 3 · SKILLS ============ -->
+<section class="page grid-bg brackets">
+  <div class="run-head"><span>FILE 01 · CAPABILITIES</span><span>서상호 PORTFOLIO</span></div>
+  <div class="sec-title"><span class="sec-no">01</span><h2>Skills &amp; Tools</h2><span class="en">보유 역량</span></div>
+
+  <div class="grid2" style="gap:6mm;align-items:start;">
+    <div class="card">
+      <h3 style="color:var(--green);">게임 기획</h3>
+      <ul class="clean small">
+        <li>시스템/메커닉 기획 · 코어 루프 설계</li>
+        <li>콘텐츠·레벨 기획 (동료·적·노드·상태이상)</li>
+        <li>밸런싱 (기대값·변동폭 기반 확률 설계)</li>
+        <li>세계관·시나리오·서사 연출</li>
+        <li>UI/UX 기획 · 튜토리얼 설계</li>
+        <li>기획서·가이드라인 문서화</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--green);">엔진 · 언어</h3>
+      <div style="margin-bottom:3mm;">
+        <span class="chip">Unity</span><span class="chip">C#</span><span class="chip">Python</span>
+        <span class="chip">Java</span><span class="chip">JavaScript</span><span class="chip">C</span>
+        <span class="chip">PHP</span><span class="chip">MySQL</span>
+      </div>
+      <div class="label" style="margin:3mm 0 2mm;">데이터 · 협업 설계</div>
+      <span class="chip chip-out">ScriptableObject</span><span class="chip chip-out">JSON 데이터 설계</span>
+      <span class="chip chip-out">Git / GitHub</span><span class="chip chip-out">오브젝트 풀링</span>
+    </div>
+  </div>
+
+  <div class="grid2" style="gap:6mm;align-items:start;margin-top:6mm;">
+    <div class="card">
+      <h3 style="color:var(--green);">데이터 · AI</h3>
+      <ul class="clean small">
+        <li>데이터 분석 — pandas, 통계·전처리·시각화</li>
+        <li>컴퓨터 비전 — Python &amp; OpenCV</li>
+        <li>생성형 AI 활용 — Google AI / Prompting Essentials</li>
+        <li>빅데이터·가명처리 실무 교육 이수</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--green);">도구 · 기타</h3>
+      <ul class="clean small">
+        <li>MS Office — Excel Expert (Office 2016) 인증</li>
+        <li>3D 프린팅 · 스마트팩토리 · 아두이노/TinkerCAD</li>
+        <li>디자인 씽킹 기반 문제 정의·아이디어 발상</li>
+        <li>발표·디렉팅 — 캡스톤 발표 진행</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card-kraft card" style="margin-top:6mm;">
+    <div class="label" style="margin-bottom:2mm;">기획자로서의 차별점</div>
+    <p class="small" style="margin:0;">
+      “<b>읽히는 기획서</b>를 씁니다.” — 시스템을 다이어그램·코어루프·데이터 구조로 분해해 개발자가 바로 구현할 수 있게 전달하고,
+      ScriptableObject·JSON으로 데이터를 분리해 밸런스를 빠르게 조정합니다. 기술을 알기에 <b>실현 가능한 기획</b>을 합니다.
+    </p>
+  </div>
+
+  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+</section>
+
+<!-- ============ PROJECT MAP ============ -->
+<section class="page grid-bg brackets">
+  <div class="run-head"><span>FILE 01.M · PROJECT MAP</span><span>서상호 PORTFOLIO</span></div>
+  <div class="sec-title"><span class="sec-no">MAP</span><h2>프로젝트 맵</h2><span class="en">ONE METHOD · MANY DOMAINS</span></div>
+
+  <p class="small" style="margin-bottom:4mm;"><b>분야가 달라도 좋은 기획의 방식은 같습니다.</b> 6개 프로젝트를 관통하는 한 가지 사고입니다.</p>
+
+  <div class="card-kraft card" style="margin-bottom:5mm;">
+    <div class="label" style="margin-bottom:2.5mm;">공통 기획 방식 · ONE METHOD</div>
+    <div class="flow" style="font-size:9pt;">
+      <div class="step"><b>① 문제 정의</b><br><span class="muted" style="font-size:7.5pt;">사용자·맥락 파악</span></div><div class="arr">→</div>
+      <div class="step"><b>② 구조 분해</b><br><span class="muted" style="font-size:7.5pt;">규칙·데이터로 분해</span></div><div class="arr">→</div>
+      <div class="step"><b>③ 시스템 설계</b><br><span class="muted" style="font-size:7.5pt;">메커닉·아키텍처</span></div><div class="arr">→</div>
+      <div class="step" style="border-color:var(--green);"><b style="color:var(--green);">④ 검증</b><br><span class="muted" style="font-size:7.5pt;">빌드·데이터·수상</span></div>
+    </div>
+  </div>
+
+  <h3 style="margin-bottom:2.5mm;">6개 도메인, 같은 기획 DNA</h3>
+  <table class="small">
+    <tr><th style="width:42mm;">프로젝트</th><th style="width:20mm;">도메인</th><th>핵심 시스템 기획</th><th style="width:44mm;">역할 · 성과</th></tr>
+    <tr><td><b>괴이탐사국 INSPECTOR</b></td><td class="keycol">게임</td><td>간접 전투·덱·동료 성향·밸런스 시스템</td><td class="small">팀장·총괄 / 캡스톤 MVP</td></tr>
+    <tr><td><b>피싱 필터</b></td><td class="keycol">보안 SaaS</td><td>3단 레이어 방어 파이프라인·수익모델</td><td class="small">기획·PM / 2026 동상</td></tr>
+    <tr><td><b>디지털 동반자</b></td><td class="keycol">AI 에이전트</td><td>음성 에이전트·복지/안전 연계 시스템</td><td class="small">기획 / 정부 우수참여자</td></tr>
+    <tr><td><b>차세대 모듈형 충전 스테이션</b></td><td class="keycol">IoT · 제품</td><td>모듈 적층·자동 전력 배분·IoT 모니터링</td><td class="small">제품기획(팀) / 2024 입상</td></tr>
+    <tr><td><b>산불 마이크로캡슐 소화기</b></td><td class="keycol">재난 · 제품</td><td>고온 감응 작동·약제/재료 비교 설계</td><td class="small">기획 / 2025 입상</td></tr>
+    <tr><td><b>작은 도서관</b></td><td class="keycol">웹 · 백엔드</td><td>DB(5테이블)·대출/예약/신청 시스템</td><td class="small">단독 / GitHub 공개</td></tr>
+  </table>
+
+  <div class="card" style="margin-top:5mm;border-left:3px solid var(--green);">
+    <p class="small" style="margin:0;"><b>강점은 ‘폭’입니다.</b> 게임에서 단련한 시스템 설계를 다른 분야 문제에도 적용해,
+    빌드·수상·정부 선정 등 <b>작동하는 결과물</b>로 이어갔습니다.</p>
+  </div>
+
+  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+</section>
+
+<!-- ============ PAGE 4 · PROJECT 01 OVERVIEW ============ -->
+<section class="page dark grid-bg brackets">
+  <div class="scan"></div>
+  <div class="run-head"><span>FILE 02 · FLAGSHIP PROJECT</span><span>TEAM 578</span></div>
+  <div class="stamp" style="top:20mm;right:20mm;">FLAGSHIP</div>
+
+  <div style="margin-top:6mm;">
+    <span class="tag tag-dark">CAPSTONE 2026 · 팀장 / 기획 총괄</span>
+    <h1 style="color:#fff;margin-top:8mm;font-size:33pt;">괴이탐사국<br><span style="color:var(--green-bright);">: INSPECTOR</span></h1>
+    <p class="mono" style="color:var(--kraft);letter-spacing:.16em;margin-top:4mm;">
+      DECK-BUILDING × AUTO-BATTLER × ROGUELIKE &nbsp;HYBRID
+    </p>
+    <p style="color:#e8e2d4;max-width:150mm;margin-top:5mm;">
+      카드가 적을 직접 공격하지 않습니다. 카드는 ‘변수를 만드는 도구’ —
+      카드로 공용 스택을 쌓으면 배치된 동료가 자동으로 싸우는 <b style="color:#fff;">간접 전투(Indirect Combat)</b> 구조의
+      전략 덱빌딩 게임입니다.
+    </p>
+  </div>
+
+  <div class="grid4" style="margin-top:12mm;gap:4mm;text-align:center;">
+    <div style="border:1px solid #3a3d40;border-radius:3px;padding:4mm 2mm;">
+      <span class="metric"><span class="num">3</span><span class="lbl" style="color:#8c8475;">팀원 (팀장)</span></span></div>
+    <div style="border:1px solid #3a3d40;border-radius:3px;padding:4mm 2mm;">
+      <span class="metric"><span class="num">4</span><span class="lbl" style="color:#8c8475;">개월 개발</span></span></div>
+    <div style="border:1px solid #3a3d40;border-radius:3px;padding:4mm 2mm;">
+      <span class="metric"><span class="num">3</span><span class="lbl" style="color:#8c8475;">빌드 마일스톤</span></span></div>
+    <div style="border:1px solid #3a3d40;border-radius:3px;padding:4mm 2mm;">
+      <span class="metric"><span class="num">MVP</span><span class="lbl" style="color:#8c8475;">코어 검증 완료</span></span></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8mm;margin-top:12mm;color:#e8e2d4;">
+    <div>
+      <div class="label" style="color:var(--green-bright);margin-bottom:2mm;">PROJECT INFO</div>
+      <table class="mono" style="font-size:8.5pt;">
+        <tr><td style="color:#8c8475;border-color:#3a3d40;width:26mm;">장르</td><td style="border-color:#3a3d40;color:#fff;">로그라이크 · 덱빌딩 · 오토배틀러</td></tr>
+        <tr><td style="color:#8c8475;border-color:#3a3d40;">플랫폼</td><td style="border-color:#3a3d40;color:#fff;">PC (Windows) 우선</td></tr>
+        <tr><td style="color:#8c8475;border-color:#3a3d40;">엔진/언어</td><td style="border-color:#3a3d40;color:#fff;">Unity 6000.3.9f1 · C#</td></tr>
+        <tr><td style="color:#8c8475;border-color:#3a3d40;">데이터</td><td style="border-color:#3a3d40;color:#fff;">ScriptableObject + JSON · PlayerPrefs</td></tr>
+        <tr><td style="color:#8c8475;border-color:#3a3d40;">협업</td><td style="border-color:#3a3d40;color:#fff;">Git / GitHub (기능별 브랜치)</td></tr>
+        <tr><td style="color:#8c8475;border-color:#3a3d40;">기간</td><td style="border-color:#3a3d40;color:#fff;">2026.03 – 2026.06</td></tr>
+      </table>
+    </div>
+    <div>
+      <div class="label" style="color:var(--green-bright);margin-bottom:2mm;">MY ROLE · 담당</div>
+      <p style="color:#fff;font-weight:700;font-size:12pt;margin-bottom:2mm;">기획 총괄 · 디렉팅 · 팀장</p>
+      <ul class="clean small" style="color:#e8e2d4;">
+        <li>전체 시스템 기획 &amp; 코어 루프 설계</li>
+        <li>밸런스 데이터 설계 (성향·확률·재화)</li>
+        <li>브랜드 가이드북 · 세계관 디렉팅</li>
+        <li>일정(간트)·역할 분담·QA 총괄</li>
+        <li>최종 발표 진행</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="run-foot"><span>OPEN THE DOOR. MANAGE THE ANOMALY.</span><span class="pageno"></span></div>
+</section>
+
+<!-- ============ PAGE 5 · PROJECT 01 SYSTEM DESIGN ============ -->
+<section class="page grid-bg brackets">
+  <div class="run-head"><span>FILE 02 · SYSTEM DESIGN</span><span>괴이탐사국 INSPECTOR</span></div>
+  <div class="sec-title"><span class="sec-no">02</span><h2>기획 의도 &amp; 시스템 설계</h2><span class="en">DESIGN INTENT</span></div>
+
+  <div class="card-kraft card" style="margin-bottom:5mm;">
+    <h3>기획 의도 — “설계와 운명이 교차하는 덱빌딩”</h3>
+    <p class="small" style="margin:0;">
+      포켓몬 카드의 <b>턴제 자원 관리</b>, 발라트로의 <b>직관적 UI</b>, 슬레이 더 스파이어의 <b>덱빌딩</b>을 재조합해,
+      카드가 직접 타격하지 않고 ‘전투의 변수’를 생성하는 <b>간접 전투</b>를 구현했습니다.
+      “영웅이 아닌, 살아남는 소시민”이라는 테마로 플레이 로그가 곧 나만의 생존기가 되는 경험을 목표로 했습니다.
+    </p>
+  </div>
+
+  <h3 style="margin-bottom:3mm;">CORE LOOP · 코어 루프 (8단계)</h3>
+  <div class="flow" style="margin-bottom:6mm;">
+    <div class="step">노드 선택</div><div class="arr">→</div>
+    <div class="step">카드로 스택 생성</div><div class="arr">→</div>
+    <div class="step">동료 자동 전투</div><div class="arr">→</div>
+    <div class="step">상태/스트레스</div><div class="arr">→</div>
+    <div class="step">보상 획득</div><div class="arr">→</div>
+    <div class="step">다음 노드</div>
+  </div>
+
+  <h3 style="margin-bottom:3mm;">차별화 시스템 4가지</h3>
+  <div class="grid2" style="gap:4mm;">
+    <div class="card small"><b style="color:var(--green);">01 · 간접 전투</b><br>
+      카드 → 역할별 공용 스택 → 동료 자동 행동. 카드의 스택 수치는 동료 <b>성향(Affinity)</b>에 따라 사용 순간 랜덤 확정 → ‘설계와 운명’의 긴장.</div>
+    <div class="card small"><b style="color:var(--green);">02 · 배치 전략</b><br>
+      동료 행동이 <b>배치 순서</b>로 고정. 미행동 동료는 다음 턴 스택 +1 &amp; 우선권 → 리스크-리턴 구조.</div>
+    <div class="card small"><b style="color:var(--green);">03 · 스트레스</b><br>
+      정신 압박 자원(0–100). 51↑ 성능 저하, 100 도달 시 <b>패닉</b>. 동료 사망 시 전원 +20 → 연쇄 위험.</div>
+    <div class="card small"><b style="color:var(--green);">04 · 이중 재화</b><br>
+      <b>영혼석</b>(런 내 소비) + <b>마석</b>(영구 메타). 단기 화력 vs 장기 성장 의사결정. 패시브 15종 + 시그니처 5종 해금.</div>
+  </div>
+
+  <h3 style="margin:6mm 0 3mm;">밸런스 철학 — “통제된 랜덤”</h3>
+  <table>
+    <tr><th>성향</th><th>특징</th><th>기대값 / 변동</th></tr>
+    <tr><td class="keycol">안전주의자</td><td>작고 확실한 결과</td><td>기대값 ≈ +0.6 · 변동 ↓</td></tr>
+    <tr><td class="keycol">도박사</td><td>크게 출렁이는 결과</td><td>기대값 ≈ +0.6 · 변동 −5/+5</td></tr>
+  </table>
+  <p class="small muted" style="margin-top:2mm;">→ 모든 성향의 기대값은 동일하게 맞추고 ‘변동 폭’만 다르게 설계. 어떤 성향을 편성하느냐로 <b>운의 크기 자체를 고르는</b> 구조 = 운을 ‘관리’하는 전략.</p>
+
+  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+</section>
+
+<!-- ============ PROJECT 02 · 시스템 수치 & 밸런스 ============ -->
+<section class="page grid-bg brackets">
+  <div class="run-head"><span>FILE 02 · SYSTEM DATA</span><span>괴이탐사국 INSPECTOR</span></div>
+  <div class="sec-title"><span class="sec-no">02</span><h2>시스템 수치 &amp; 밸런스</h2><span class="en">DATA &amp; BALANCE</span></div>
+
+  <p class="small muted" style="margin-bottom:5mm;">기획의 핵심은 ‘수치로 의도를 통제하는 것’. 아래는 INSPECTOR의 주요 밸런스 규칙을 수치로 정리한 것입니다.</p>
+
+  <div class="grid2" style="gap:6mm;align-items:start;">
+    <div>
+      <h3 style="margin-bottom:2mm;">동료 역할 · 행동 규칙</h3>
+      <table class="small">
+        <tr><th>역할</th><th>소비 스택 → 행동</th></tr>
+        <tr><td class="keycol">딜러</td><td>딜러 스택 → 피해</td></tr>
+        <tr><td class="keycol">탱커</td><td>탱커 스택 → 실드</td></tr>
+        <tr><td class="keycol">서포터</td><td>서포터 스택 → 회복</td></tr>
+      </table>
+      <ul class="clean small" style="margin-top:2mm;">
+        <li>배치 순서대로 자기 역할 스택을 소비해 자동 행동</li>
+        <li>미행동 시 → 다음 턴 해당 스택 <b>+1</b> &amp; 행동 우선권 (리스크-리턴)</li>
+      </ul>
+
+      <h3 style="margin:5mm 0 2mm;">스트레스 (0–100)</h3>
+      <table class="small">
+        <tr><th>구간</th><th>효과</th></tr>
+        <tr><td class="keycol">51 초과</td><td>스킬 성능 저하 · 받는 스트레스 증가</td></tr>
+        <tr><td class="keycol">100 도달</td><td><b>패닉</b> (공포 경직 / 과호흡)</td></tr>
+        <tr><td class="keycol">동료 사망 시</td><td>전원 <b>+20</b> (연쇄 패닉 위험)</td></tr>
+      </table>
+    </div>
+
+    <div>
+      <h3 style="margin-bottom:2mm;">이중 재화 · 메타 성장</h3>
+      <table class="small">
+        <tr><th>재화</th><th>용도</th><th>지속</th></tr>
+        <tr><td class="keycol">영혼석</td><td>런 내 소비(용병 모집 등)</td><td>런 한정</td></tr>
+        <tr><td class="keycol">마석</td><td>패시브·시그니처 해금</td><td>영구</td></tr>
+      </table>
+      <ul class="clean small" style="margin-top:2mm;">
+        <li>마석 패시브 <b>15종</b> + 시그니처 <b>5종</b>, 런 시작 시 해금분 중 1개 무작위 배정</li>
+        <li>전체 해금까지 약 <b>6–9런</b> (회차마다 다른 플레이)</li>
+      </ul>
+
+      <h3 style="margin:5mm 0 2mm;">자원 고갈 · 적 AI</h3>
+      <ul class="clean small">
+        <li><b>탈진</b> — 덱 소진 후 드로우 불가 시 매 턴 전원 <b>5</b> 피해</li>
+        <li>적 기본: <b>앞열 우선</b> 공격(예측 가능)</li>
+        <li>변수: 가중치 룰렛 · 일부 ‘체력 최저 아군’ 타겟팅</li>
+        <li>보스 ‘거두는 자’: <b>상태머신</b>으로 국면별 패턴 전환</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card-kraft card" style="margin-top:5mm;">
+    <div class="label" style="margin-bottom:2mm;">MVP 검증 범위</div>
+    <div class="grid4" style="gap:3mm;text-align:center;">
+      <div><span class="metric"><span class="num">5</span><span class="lbl">동료</span></span></div>
+      <div><span class="metric"><span class="num">3</span><span class="lbl">적 유형</span></span></div>
+      <div><span class="metric"><span class="num">4</span><span class="lbl">노드 유형</span></span></div>
+      <div><span class="metric"><span class="num">15–20<span style="font-size:9pt;">분</span></span><span class="lbl">목표 플레이타임</span></span></div>
+    </div>
+    <p class="small muted" style="margin:3mm 0 0;">고정 6단계 시퀀스(시작→전투→용병소→전투→화톳불→보스)를 안정적으로 완주하며 <b>코어 루프 정상 동작을 검증</b>하는 데 집중.</p>
+  </div>
+
+  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+</section>
+
+<!-- ============ PAGE 6 · PROJECT 01 CONTENT + SCHEDULE + CONTRIBUTION ============ -->
+<section class="page grid-bg brackets">
+  <div class="run-head"><span>FILE 02 · CONTENT &amp; PROCESS</span><span>괴이탐사국 INSPECTOR</span></div>
+  <div class="sec-title"><span class="sec-no">02</span><h2>콘텐츠 · 개발 과정 · 기여</h2><span class="en">CONTENT / PROCESS</span></div>
+
+  <div class="grid2" style="gap:6mm;align-items:start;">
+    <div>
+      <h3 style="margin-bottom:3mm;">MVP 콘텐츠 범위</h3>
+      <div class="grid3" style="gap:3mm;text-align:center;margin-bottom:5mm;">
+        <div class="card"><span class="metric"><span class="num">5</span><span class="lbl">동료 (딜/탱/서폿)</span></span></div>
+        <div class="card"><span class="metric"><span class="num">3</span><span class="lbl">적 유형</span></span></div>
+        <div class="card"><span class="metric"><span class="num">4</span><span class="lbl">노드 유형</span></span></div>
+      </div>
+      <p class="small muted" style="margin-bottom:5mm;">
+        MVP 목표는 ‘양’이 아니라 <b>코어 루프가 재미있게 도는가의 증명</b>. 카드→스택→자동전투→스트레스→마석 성장의
+        핵심 고리를 한 바퀴 완결하는 데 집중 (목표 플레이 15–20분).
+      </p>
+
+      <h3 style="margin-bottom:3mm;">시스템 구성 요소</h3>
+      <span class="chip chip-out">덱·카드</span><span class="chip chip-out">동료 성향</span>
+      <span class="chip chip-out">전투/상태이상</span><span class="chip chip-out">스트레스</span>
+      <span class="chip chip-out">재화·보상</span><span class="chip chip-out">용병소</span>
+      <span class="chip chip-out">성급(★)</span><span class="chip chip-out">노드맵</span>
+      <span class="chip chip-out">튜토리얼</span><span class="chip chip-out">보스 상태머신 AI</span>
+      <span class="chip chip-out">오디오</span><span class="chip chip-out">데이터 구조</span>
+    </div>
+
+    <div>
+      <h3 style="margin-bottom:3mm;">개발 일정 <span class="muted small">2026.03 – 06</span></h3>
+      <div class="timeline">
+        <div class="row"><span class="when">3월 4–5주</span><span>아이디어 협의 · 시스템 기획 · 간트 설정</span></div>
+        <div class="row"><span class="when">4월 1–2주</span><span>시스템 기획 완료 · 개발 착수 · <b>1차 빌드</b></span></div>
+        <div class="row"><span class="when">4월 3–5주</span><span>전투 코어 루프·상태이상 · <b>2차 빌드</b> · JSON 전환</span></div>
+        <div class="row"><span class="when">5월 1–3주</span><span>적 확장 · 보스 AI · 용병소 · UX 통합 · <b>3차 빌드</b></span></div>
+        <div class="row"><span class="when">5월 4–5주</span><span>마석 메타 성장 · 콘텐츠 기획 완료</span></div>
+        <div class="row"><span class="when">6월 1–2주</span><span>노드맵 재설계 · 튜토리얼 · <b>MVP 완료</b> · QA</span></div>
+        <div class="row"><span class="when">6월 3주</span><span style="color:var(--green);font-weight:700;">최종 발표</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-kraft card" style="margin-top:6mm;">
+    <div class="label" style="margin-bottom:2mm;">MY CONTRIBUTION · 기획자로서 한 일</div>
+    <div class="grid2 small" style="gap:1mm 8mm;">
+      <ul class="clean"><li>장르 융합 콘셉트 정의 &amp; 전체 시스템 기획</li><li>코어 루프·차별화 메커닉(간접 전투) 설계</li><li>동료·적·노드·상태이상 콘텐츠 기획</li></ul>
+      <ul class="clean"><li>밸런스 데이터(성향·확률·재화) 설계</li><li>세계관·서사·브랜드 가이드북 디렉팅</li><li>팀 일정 관리 · QA · 최종 발표 진행</li></ul>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:5mm;border-left:3px solid var(--green);">
+    <p class="small" style="margin:0;"><b>가장 큰 도전 &amp; 해결 (팀장으로서)</b> — 짧은 아이디어 회의·구현은 다들 집중해 빠르게 해냈지만,
+    <b>한 학기 단위의 장기 과제</b>에서는 시간 배분과 팀원 간 의사소통이 더 큰 난관이었습니다.
+    그래서 작업을 <b>‘할 수 있는 것 · 해야 하는 것 · 하면 좋은 것’</b>으로 빠르게 나눠 우선순위대로 분배했고,
+    덕분에 차질 없이 계획한 대로 MVP를 완성했습니다.</p>
+  </div>
+
+  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+</section>
+
+<!-- ============ PROJECT 02 · IN-GAME SCREENS ============ -->
+<section class="page grid-bg brackets">
+  <div class="run-head"><span>FILE 02.A · IN-GAME SCREENS</span><span>괴이탐사국 INSPECTOR</span></div>
+  <div class="sec-title"><span class="sec-no">02.A</span><h2>게임 화면</h2><span class="en">IN-GAME SCREENS</span></div>
+
+  <!-- 타이틀 배너 -->
+  <div style="border:1px solid var(--line);border-radius:3px;overflow:hidden;height:38mm;display:flex;align-items:center;justify-content:center;background:#1a1c1e;margin-bottom:2mm;">
+    <img src="assets/game_title.jpg" style="width:100%;height:100%;object-fit:cover;object-position:center;">
+  </div>
+  <p class="small muted" style="text-align:center;margin-bottom:5mm;">『괴이탐사국: INSPECTOR』 타이틀 — “Open the door. Manage the anomaly.”</p>
+
+  <!-- 메인 2장 -->
+  <div class="grid2" style="gap:4mm;margin-bottom:4mm;">
+    <figure style="margin:0;">
+      <div style="border:1px solid var(--line);background:#1a1c1e;border-radius:3px;height:54mm;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="assets/game_battle.jpg" style="max-width:100%;max-height:100%;object-fit:contain;"></div>
+      <figcaption class="small" style="margin-top:1.5mm;text-align:center;"><b>전투 화면</b> <span class="muted">— 동료 자동 전투 + 카드·공용 스택 UI</span></figcaption>
+    </figure>
+    <figure style="margin:0;">
+      <div style="border:1px solid var(--line);background:#1a1c1e;border-radius:3px;height:54mm;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="assets/game_party.jpg" style="max-width:100%;max-height:100%;object-fit:contain;"></div>
+      <figcaption class="small" style="margin-top:1.5mm;text-align:center;"><b>파티 편성</b> <span class="muted">— 배치 순서 기반 전략 구성</span></figcaption>
+    </figure>
+  </div>
+
+  <!-- 서브 3장 -->
+  <div class="grid3" style="gap:4mm;">
+    <figure style="margin:0;">
+      <div style="border:1px solid var(--line);background:#1a1c1e;border-radius:3px;height:46mm;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="assets/game_allies.jpg" style="max-width:100%;max-height:100%;object-fit:contain;"></div>
+      <figcaption class="small muted" style="margin-top:1.5mm;text-align:center;font-size:7.5pt;">동료 유닛 5종 (딜/탱/서폿)</figcaption>
+    </figure>
+    <figure style="margin:0;">
+      <div style="border:1px solid var(--line);background:#1a1c1e;border-radius:3px;height:46mm;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="assets/game_cards.jpg" style="max-width:100%;max-height:100%;object-fit:contain;"></div>
+      <figcaption class="small muted" style="margin-top:1.5mm;text-align:center;font-size:7.5pt;">카드 · 공용 스택 시스템</figcaption>
+    </figure>
+    <figure style="margin:0;">
+      <div style="border:1px solid var(--line);background:#1a1c1e;border-radius:3px;height:46mm;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="assets/game_merc.jpg" style="max-width:100%;max-height:100%;object-fit:contain;"></div>
+      <figcaption class="small muted" style="margin-top:1.5mm;text-align:center;font-size:7.5pt;">용병소 — 마석 메타 성장</figcaption>
+    </figure>
+  </div>
+
+  <p class="small mono muted" style="margin-top:5mm;border-top:1px solid var(--line);padding-top:3mm;text-align:center;">실제 Unity 빌드(MVP) 화면 — 동료 5종 · 적 3종 · 노드 4종으로 코어 루프 완주 검증</p>
+
+  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+</section>
+
+<!-- ============ PAGE · PROJECT 02 BRAND ============ -->
+<section class="page grid-bg brackets">
+  <div class="run-head"><span>FILE 02.B · BRAND DIRECTION</span><span>괴이탐사국 INSPECTOR</span></div>
+  <div class="sec-title"><span class="sec-no">02.B</span><h2>브랜드 마스터 가이드북</h2><span class="en">BRAND &amp; DESIGN SYSTEM</span></div>
+
+  <p class="small muted" style="margin-bottom:5mm;">게임 시스템을 넘어, 하나의 <b>브랜드</b>로서 일관된 정체성을 정의했습니다. 전략·페르소나·비주얼·UX·오디오까지 아우르는 마스터 가이드북을 직접 작성했습니다.</p>
+
+  <div class="grid2" style="gap:6mm;align-items:start;">
+    <div class="card">
+      <div class="label" style="margin-bottom:2mm;">BRAND STRATEGY</div>
+      <table class="small">
+        <tr><td class="keycol">브랜드명</td><td>국내 괴이탐사국 / 해외 INSPECTOR (이원화 브랜딩)</td></tr>
+        <tr><td class="keycol">한 줄 정의</td><td>냉철한 조사관이 되어 괴이를 통제하고 조직의 비밀을 파헤치는 지적 카타르시스의 덱빌딩 시뮬레이션</td></tr>
+        <tr><td class="keycol">핵심 타깃</td><td>매너리즘 느낀 전략 게이머 · SCP/백룸 오컬트 헤비 유저</td></tr>
+        <tr><td class="keycol">태그라인</td><td>“우리는 괴이를 두려워하지 않는다. 다만 분류할 뿐.”<br><span class="mono muted">Open the door. Manage the anomaly.</span></td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="label" style="margin-bottom:3mm;">TARGET PERSONA · 3종</div>
+      <ul class="clean small">
+        <li><b>뇌세포풀가동</b> (27, 전략 게이머) — 양산형 오토배틀러에 매너리즘, 새로운 규칙을 갈망</li>
+        <li><b>백룸조사관A</b> (22, 오컬트 탐닉자) — 1차원 점프 스케어에 피로, 깊은 서사 추구</li>
+        <li><b>서류에파묻힌자</b> (32, 스마트 직장인) — 퇴근 후 가볍게 매니징할 세련된 게임</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 style="margin:6mm 0 3mm;">VISUAL SYSTEM · 컬러 팔레트</h3>
+  <div class="grid3" style="gap:4mm;">
+    <div><div class="swatch" style="background:#1A1C1E;"></div><b class="small">Carbon Charcoal</b><br><span class="mono small muted">#1A1C1E · 70% 배경</span></div>
+    <div><div class="swatch" style="background:#D2C4A7;"></div><b class="small">Manila Kraft</b><br><span class="mono small muted">#D2C4A7 · 25% 서류/패널</span></div>
+    <div><div class="swatch" style="background:#00FF66;"></div><b class="small">Phosphor Green</b><br><span class="mono small muted">#00FF66 · 5% 경고/포인트</span></div>
+  </div>
+
+  <div class="grid2" style="gap:6mm;margin-top:6mm;align-items:start;">
+    <div>
+      <h3 style="margin-bottom:2mm;">타이포그래피</h3>
+      <ul class="clean small">
+        <li><b>Mono</b> (JetBrains/D2Coding) — 전투 UI·스탯·로그</li>
+        <li><b>Cold Grotesque</b> (Inter/Pretendard) — 타이틀·공문</li>
+        <li><b>Archival Serif</b> (명조/타자기) — 수첩 서사·떡밥</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="margin-bottom:2mm;">UX / 오디오 — “담담함의 규칙”</h3>
+      <p class="small" style="margin:0;">‘수첩 수령 → 철문 통과’ 출동 의식으로 멀티버스를 일관된 톤으로 포섭. 전투 진입 시 화려한 스킬음 대신
+      <b>서류 펼치는 소리·무전 노이즈</b>만 → 전투를 ‘냉철히 처리할 업무’로 인식시킴.</p>
+    </div>
+  </div>
+
+  <p class="small mono muted" style="margin-top:5mm;border-top:1px solid var(--line);padding-top:3mm;">
+    ※ 본 포트폴리오 전체가 INSPECTOR 브랜드 시스템(Charcoal / Kraft / Phosphor Green · 모노스페이스 · 브래킷 프레임)으로 디자인되었습니다.
+  </p>
+
+  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+</section>
+
+<!-- ============ PAGE 8 · PROJECT 03 · 피싱필터 OVERVIEW ============ -->
+<section class="page dark grid-bg brackets">
+  <div class="scan" style="background:repeating-linear-gradient(0deg,rgba(91,120,255,.05) 0 1px,transparent 1px 4px);"></div>
+  <div class="run-head"><span>FILE 03 · KEY PROJECT</span><span>PHISHING FILTER</span></div>
+  <div class="stamp" style="top:20mm;right:20mm;border-color:#5b78ff;color:#5b78ff;">AWARD 2026</div>
+
+  <div style="margin-top:6mm;">
+    <span class="tag tag-dark" style="color:#9fb0ff;border-color:#5b78ff;">KEY PROJECT · 2026 창의 아이디어 동상</span>
+    <h1 style="color:#fff;margin-top:8mm;font-size:33pt;">피싱 필터<br><span style="color:#5b78ff;">Phishing Filter</span></h1>
+    <p class="mono" style="color:var(--kraft);letter-spacing:.14em;margin-top:4mm;">
+      SOCIAL ACCOUNT · 3-LAYER PHISHING DEFENSE
+    </p>
+    <p style="color:#e8e2d4;max-width:150mm;margin-top:5mm;">
+      이메일도, 단순 URL 검사도 놓치는 <b style="color:#fff;">소셜 DM 피싱</b>을 정조준한 보안 솔루션.
+      DNS → 리다이렉트 → DOM의 <b style="color:#5b78ff;">3단 레이어</b>로 링크를 실제 렌더링까지 분석해 위험 점수를 반환합니다.
+    </p>
+  </div>
+
+  <div class="grid4" style="margin-top:11mm;gap:4mm;text-align:center;">
+    <div style="border:1px solid #3a3d40;border-radius:3px;padding:4mm 2mm;">
+      <span class="metric"><span class="num" style="color:#5b78ff;">동상</span><span class="lbl" style="color:#8c8475;">2026 창의 아이디어</span></span></div>
+    <div style="border:1px solid #3a3d40;border-radius:3px;padding:4mm 2mm;">
+      <span class="metric"><span class="num" style="color:#5b78ff;">4.2</span><span class="lbl" style="color:#8c8475;">Judge Mode / 5.0</span></span></div>
+    <div style="border:1px solid #3a3d40;border-radius:3px;padding:4mm 2mm;">
+      <span class="metric"><span class="num" style="color:#5b78ff;">3</span><span class="lbl" style="color:#8c8475;">방어 레이어</span></span></div>
+    <div style="border:1px solid #3a3d40;border-radius:3px;padding:4mm 2mm;">
+      <span class="metric"><span class="num" style="color:#5b78ff;">980억</span><span class="lbl" style="color:#8c8475;">2024 피싱 피해액</span></span></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8mm;margin-top:11mm;color:#e8e2d4;">
+    <div>
+      <div class="label" style="color:#5b78ff;margin-bottom:2mm;">PROJECT INFO</div>
+      <table class="mono" style="font-size:8.5pt;">
+        <tr><td style="color:#8c8475;border-color:#3a3d40;width:26mm;">유형</td><td style="border-color:#3a3d40;color:#fff;">보안 SaaS · 창업 아이디어</td></tr>
+        <tr><td style="color:#8c8475;border-color:#3a3d40;">분야</td><td style="border-color:#3a3d40;color:#fff;">소셜 DM 피싱 방어</td></tr>
+        <tr><td style="color:#8c8475;border-color:#3a3d40;">핵심 기술</td><td style="border-color:#3a3d40;color:#fff;">FastAPI · Docker · Playwright · Python</td></tr>
+        <tr><td style="color:#8c8475;border-color:#3a3d40;">보안 DB</td><td style="border-color:#3a3d40;color:#fff;">PhishTank · OpenPhish · DoH</td></tr>
+        <tr><td style="color:#8c8475;border-color:#3a3d40;">성과</td><td style="border-color:#3a3d40;color:#fff;">2026 창의 아이디어 경진대회 동상</td></tr>
+        <tr><td style="color:#8c8475;border-color:#3a3d40;">팀</td><td style="border-color:#3a3d40;color:#fff;">2인 (PM·기획 / 백엔드·인프라)</td></tr>
+      </table>
+    </div>
+    <div>
+      <div class="label" style="color:#5b78ff;margin-bottom:2mm;">MY ROLE · 담당</div>
+      <p style="color:#fff;font-weight:700;font-size:12pt;margin-bottom:2mm;">기획 · PM</p>
+      <ul class="clean small" style="color:#e8e2d4;">
+        <li>보안 사각지대(소셜 DM) 문제 정의</li>
+        <li>3단 레이어 방어 아키텍처 기획</li>
+        <li>경쟁 분석 · 수익 모델 · GTM 전략 설계</li>
+        <li>시장 규모 산정 · 마일스톤 로드맵</li>
+        <li>발표 자료 제작 &amp; 발표</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="run-foot"><span>WE PROTECT WHAT MATTERS.</span><span class="pageno"></span></div>
+</section>
+
+<!-- ============ PAGE 9 · PROJECT 03 · 피싱필터 SYSTEM & BUSINESS ============ -->
+<section class="page grid-bg brackets">
+  <div class="run-head"><span>FILE 03 · SYSTEM &amp; BUSINESS</span><span>피싱 필터 PHISHING FILTER</span></div>
+  <div class="sec-title"><span class="sec-no">03</span><h2>아키텍처 &amp; 사업화</h2><span class="en">3-LAYER / BUSINESS</span></div>
+
+  <h3 style="margin-bottom:3mm;">3단 레이어 방어 파이프라인</h3>
+  <div class="grid3" style="gap:4mm;margin-bottom:6mm;">
+    <div class="card small" style="border-top:3px solid #2b50e0;">
+      <b>Layer 1 · DNS 필터링</b>
+      <p style="margin:2mm 0 0;">DoH 리졸버 + PhishTank/OpenPhish 교차 검증, Redis 캐시(TTL 1h), <b>10ms 이하</b> 레이턴시. 악성 도메인 즉시 차단.</p>
+    </div>
+    <div class="card small" style="border-top:3px solid var(--green);">
+      <b>Layer 2 · 리다이렉트 추적</b>
+      <p style="margin:2mm 0 0;">httpx 비동기 리다이렉트 추적, QR 코드 URL 추출, 화이트리스트 관리. 최종 목적지 확인 후 고지.</p>
+    </div>
+    <div class="card small" style="border-top:3px solid #d23b3b;">
+      <b>Layer 3 · DOM 분석</b>
+      <p style="margin:2mm 0 0;">Playwright 컨테이너 렌더링 + 시그니처 매칭 → <b>위험 점수 0.0~1.0</b> 반환 (안전/의심/위험).</p>
+    </div>
+  </div>
+
+  <div class="grid2" style="gap:6mm;align-items:start;margin-bottom:6mm;">
+    <div class="card" style="border-left:3px solid #2b50e0;">
+      <div class="label" style="margin-bottom:2mm;">차별화 · 해자 (MOAT)</div>
+      <ul class="clean small">
+        <li><b>소셜 DM에 집중</b> — 이메일 피싱(Proofpoint)·DNS 레벨(Cloudflare)이 못 잡는 갭</li>
+        <li><b>실제 DOM 렌더링까지 분석</b> — URL/DNS 검사가 아닌 컨테이너 렌더링 파이프라인</li>
+        <li>플랫폼이 자체 링크검사를 넣어도 DOM 분석까지는 안 감 → 기술적 진입장벽</li>
+      </ul>
+    </div>
+    <div class="card" style="border-left:3px solid #2b50e0;">
+      <div class="label" style="margin-bottom:2mm;">리스크 관리 (발췌)</div>
+      <ul class="clean small">
+        <li><b>오탐</b> → ‘차단’ 대신 ‘위험 점수+경고’ UX, 신고 시 재학습 루프</li>
+        <li><b>DoS</b> → 고객사별 동시분석 상한 + Rate Limit(60/분)</li>
+        <li><b>자원 누수</b> → 50건/400MB 도달 시 컨테이너 자동 재시작</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 style="margin-bottom:3mm;">사업화 설계</h3>
+  <div class="grid3" style="gap:4mm;">
+    <div class="card-kraft card small">
+      <div class="label" style="margin-bottom:2mm;">수익 모델 (Seat)</div>
+      <p style="margin:0;"><b>Starter</b> $1.99 · <b>Pro</b> $9.99 · <b>Enterprise</b> $49.99 / 월<br><span class="muted">크롬 확장 → 팀 대시보드 → 온프레미스</span></p>
+    </div>
+    <div class="card-kraft card small">
+      <div class="label" style="margin-bottom:2mm;">시장 · GTM</div>
+      <p style="margin:0;">국내 SOM 소셜 담당자 ~7,000명. <b>PLG + 10분 온보딩</b>으로 PoC→파트너→웹스토어 3단 획득.</p>
+    </div>
+    <div class="card-kraft card small">
+      <div class="label" style="margin-bottom:2mm;">검증 · 마일스톤</div>
+      <p style="margin:0;"><b>Judge Mode Pass 4.2/5.0</b> 완료 <span class="muted">(대회 발표 자체 평가 기준)</span>. Layer3 PoC → Chrome Ext MVP → B2B 대시보드 로드맵.</p>
+    </div>
+  </div>
+
+  <p class="small muted" style="margin-top:5mm;border-top:1px solid var(--line);padding-top:3mm;">
+    ※ 「피싱 필터」는 <b>창의 아이디어 경진대회 3년 연속 수상</b>(2024 입상 → 2025 입상 → <b>2026 동상</b>)의 결실로, 문제 정의부터 기술 아키텍처·사업화까지 기획 전 과정을 다뤘습니다.
+  </p>
+
+  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+</section>
+
+<!-- ============ PROJECT 03 · 피싱필터 문제 & 시각자료 ============ -->
+<section class="page grid-bg brackets">
+  <div class="run-head"><span>FILE 03.A · PROBLEM &amp; VISUALS</span><span>피싱 필터 PHISHING FILTER</span></div>
+  <div class="sec-title"><span class="sec-no">03.A</span><h2>문제 인식 &amp; 자료</h2><span class="en">PROBLEM &amp; VISUALS</span></div>
+
+  <div class="grid2" style="gap:5mm;align-items:start;margin-bottom:4mm;">
+    <figure style="margin:0;">
+      <div style="border:1px solid var(--line);background:#fff;border-radius:3px;height:52mm;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="assets/phish_naver.jpg" style="max-width:100%;max-height:100%;object-fit:contain;"></div>
+      <figcaption class="small" style="margin-top:1.5mm;text-align:center;"><b>구분 불가능한 위협</b> <span class="muted">— 진짜(좌) vs 피싱(우) 로그인, 거의 동일</span></figcaption>
+    </figure>
+    <figure style="margin:0;">
+      <div style="border:1px solid var(--line);background:#fff;border-radius:3px;height:52mm;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="assets/phish_stats.jpg" style="max-width:100%;max-height:100%;object-fit:contain;"></div>
+      <figcaption class="small" style="margin-top:1.5mm;text-align:center;"><b>급증하는 피해</b> <span class="muted">— 2024 피싱 13,988건 · 피해 980억 (출처: KISA)</span></figcaption>
+    </figure>
+  </div>
+
+  <div class="grid2" style="gap:5mm;align-items:start;">
+    <figure style="margin:0;">
+      <div style="border:1px solid var(--line);background:#fff;border-radius:3px;height:52mm;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="assets/phish_pipeline.jpg" style="max-width:100%;max-height:100%;object-fit:contain;"></div>
+      <figcaption class="small" style="margin-top:1.5mm;text-align:center;"><b>3단 레이어 파이프라인</b> <span class="muted">— DNS → 리다이렉트 → DOM</span></figcaption>
+    </figure>
+    <figure style="margin:0;">
+      <div style="border:1px solid var(--line);background:#fff;border-radius:3px;height:52mm;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="assets/phish_market.jpg" style="max-width:100%;max-height:100%;object-fit:contain;"></div>
+      <figcaption class="small" style="margin-top:1.5mm;text-align:center;"><b>시장 규모</b> <span class="muted">— SOM·SAM·TAM, 국내 검증 후 글로벌</span></figcaption>
+    </figure>
+  </div>
+
+  <p class="small mono muted" style="margin-top:5mm;border-top:1px solid var(--line);padding-top:3mm;text-align:center;">실제 발표 자료(2026 창의 아이디어 경진대회) — 한국인터넷진흥원 피싱 URL 데이터 기반 설계</p>
+
+  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+</section>
+
+<!-- ============ OTHER PROJECTS (1/2) ============ -->
+<section class="page grid-bg brackets">
+  <div class="run-head"><span>FILE 03.B · SELECTED PROJECTS</span><span>서상호 PORTFOLIO</span></div>
+  <div class="sec-title"><span class="sec-no">03.B</span><h2>도메인 시스템 기획 <span style="font-size:11pt;color:var(--muted);">(1/2)</span></h2><span class="en">AI &amp; DEV</span></div>
+
+  <!-- 디지털 동반자 -->
+  <div class="card dark" style="margin-bottom:5mm;position:relative;overflow:hidden;">
+    <div class="scan"></div>
+    <span class="tag tag-dark">모두의 아이디어 (정부 공모) · 우수참여자 선정</span>
+    <h3 style="color:#fff;margin-top:3mm;font-size:14pt;">디지털 동반자 — 고령층을 위한 음성형 생활 에이전트</h3>
+    <p class="small" style="color:#e8e2d4;margin:2mm 0 3mm;">
+      과제 「AI 에이전트로 일상 바꾸기」 · 2026.01 — 고령층의 큰 디지털 정보격차를 해소하는
+      <b style="color:#fff;">음성 기반 대화형 에이전트</b>. 불완전한 구어체의 의도를 파악하고, 복지·안전까지 연결하는 ‘디지털 돌봄 파트너’를 기획했습니다.
+    </p>
+    <div class="grid4" style="gap:3mm;">
+      <div style="border:1px solid #3a3d40;border-radius:3px;padding:2.5mm;"><b class="small" style="color:#fff;">구어체 이해 튜터</b><br><span class="small" style="color:#8c8475;">단계별 음성 안내 → 가족 의존도↓</span></div>
+      <div style="border:1px solid #3a3d40;border-radius:3px;padding:2.5mm;"><b class="small" style="color:#fff;">상황 인지 UI</b><br><span class="small" style="color:#8c8475;">시간·위치·건강 따라 톤/큰글씨</span></div>
+      <div style="border:1px solid #3a3d40;border-radius:3px;padding:2.5mm;"><b class="small" style="color:#fff;">복지·안전 연계</b><br><span class="small" style="color:#8c8475;">웨어러블 낙상·심박→보호자/119</span></div>
+      <div style="border:1px solid #3a3d40;border-radius:3px;padding:2.5mm;"><b class="small" style="color:#fff;">사기 예방 경고</b><br><span class="small" style="color:#8c8475;">피싱 문자·이상 금융접근 탐지</span></div>
+    </div>
+    <p class="small mono" style="color:#8c8475;margin:3mm 0 0;">ARCH &nbsp;음성·터치·위치·웨어러블 → NLU 의도분석·컨텍스트 인지·대화관리·액션실행 → 음성/큰글씨 UI/비상알림</p>
+    <p class="small" style="color:#e8e2d4;margin:3mm 0 0;"><b style="color:var(--green-bright);">우수참여자(상위 1만명) 선정 · 참여포상 지급대상</b> &nbsp;|&nbsp; 담당: 기획 — 문제 정의·기능 구조·사용 시나리오·UX 설계</p>
+  </div>
+
+  <!-- 작은 도서관 -->
+  <div class="card" style="border-top:3px solid #2b50e0;">
+    <div class="label" style="margin-bottom:1.5mm;">2025 · 개인 프로젝트 · 웹 풀스택</div>
+    <h3>작은 도서관 — 사용자·관리자 웹 플랫폼</h3>
+    <div class="grid2" style="gap:5mm;align-items:start;margin-top:2mm;">
+      <div>
+        <p class="small" style="margin:0;">도서 등록·검색·<b>대출·예약·신청</b>을 사용자/관리자 권한으로 처리하는 도서관 시스템. <b>C·PHP·MySQL</b>로 직접 구현했습니다.</p>
+        <div style="margin-top:2.5mm;">
+          <span class="chip chip-out">C</span><span class="chip chip-out">PHP</span><span class="chip chip-out">MySQL</span>
+          <span class="chip chip-out">Kakao API</span><span class="chip chip-out">Git</span>
+        </div>
+      </div>
+      <div>
+        <ul class="clean small" style="margin:0;">
+          <li><b>DB 설계</b> — 5개 테이블 ERD(books·users·loans·reservations·book_requests), FK 관계</li>
+          <li><b>안정적 처리</b> — 트랜잭션·prepared statement, 카카오 API로 도서정보 자동 등록</li>
+          <li><b>형상 관리</b> — GitHub <span class="mono">se0sangh0/library</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="grid2" style="gap:4mm;margin-top:3mm;">
+      <figure style="margin:0;">
+        <div style="border:1px solid var(--line);background:#fff;border-radius:3px;height:46mm;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="assets/proj_library_erd.jpg" style="max-width:100%;max-height:100%;object-fit:contain;"></div>
+        <figcaption class="small muted" style="margin-top:1mm;text-align:center;font-size:7.5pt;">DB ERD — 5개 테이블 관계 설계</figcaption>
+      </figure>
+      <figure style="margin:0;">
+        <div style="border:1px solid var(--line);background:#1a1c1e;border-radius:3px;height:46mm;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="assets/proj_library_code.jpg" style="max-width:100%;max-height:100%;object-fit:contain;"></div>
+        <figcaption class="small muted" style="margin-top:1mm;text-align:center;font-size:7.5pt;">구현 — 트랜잭션 기반 도서 등록(C·MySQL)</figcaption>
+      </figure>
+    </div>
+    <p class="small muted" style="margin:2.5mm 0 0;">담당: 기획·DB 설계·백엔드 개발 전 과정 (단독)</p>
+  </div>
+
+  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+</section>
+
+<!-- ============ OTHER PROJECTS (2/2) ============ -->
+<section class="page grid-bg brackets">
+  <div class="run-head"><span>FILE 03.B · SELECTED PROJECTS</span><span>서상호 PORTFOLIO</span></div>
+  <div class="sec-title"><span class="sec-no">03.B</span><h2>도메인 시스템 기획 <span style="font-size:11pt;color:var(--muted);">(2/2)</span></h2><span class="en">PRODUCT &amp; GAME</span></div>
+
+  <div class="grid2" style="gap:5mm;align-items:start;">
+    <div class="card" style="border-top:3px solid var(--green);">
+      <div class="label" style="margin-bottom:1.5mm;">2024 · 창의적 종합설계 (팀) · 창의 아이디어 입상</div>
+      <h3>차세대 모듈형 충전 스테이션 <span class="small muted" style="font-weight:400;">(공모 출품명: 모듈형 파워스테이션)</span></h3>
+      <p class="small">멀티탭 난립과 충전 규격 불일치 문제를 <b>적층형 모듈</b>로 해결한 IoT 충전 제품. USB·AC 타입 ‘플로어’를 <b>포고핀(pogo pin)</b>으로 적층하고, 플로어별 인식칩셋이 전력을 자동 배분합니다.</p>
+      <ul class="clean small">
+        <li>사용 패턴 학습 → 대기전력 자동 차단(전기 요금 절감)</li>
+        <li>PD/QC 프로토콜·IoT 멀티탭 → 앱에서 전력 모니터링·요금 분석</li>
+        <li>걸쇠 결합 구조로 비인증 장치 연결 방지</li>
+      </ul>
+      <div style="margin-top:2mm;">
+        <span class="chip chip-out">제품 기획</span><span class="chip chip-out">모듈화</span>
+        <span class="chip chip-out">IoT</span><span class="chip chip-out">확장성</span>
+      </div>
+      <p class="small muted" style="margin:2.5mm 0 0;">담당: 제품 컨셉 · 확장성/모듈화 구조 기획 (3인 팀)</p>
+    </div>
+
+    <div class="card" style="border-top:3px solid #d23b3b;">
+      <div class="label" style="margin-bottom:1.5mm;">2025 · 창의 아이디어 경진대회 입상</div>
+      <h3>산불 초기대응 마이크로캡슐 소화기</h3>
+      <p class="small">소방대 도착 전 <b>선제 진압</b>을 위한 고온 감응 자동작동 소화 캡슐. 산지 환경에 맞춰 약제·재료·반응 방식을 비교 분석해 설계했습니다.</p>
+      <ul class="clean small">
+        <li>동작: 고온 노출 → 외벽 열분해 → 압력 상승 → 파열·분사 (≈50m 확산)</li>
+        <li>소화약제 비교(Phos-Chek / Miracle Foam / KFRI) 후 친환경 선택</li>
+        <li>반응방식 4종(고압가스·화약·센서·알칼리) 장단점 분석</li>
+      </ul>
+      <div style="margin-top:2mm;">
+        <span class="chip chip-out">문제 정의</span><span class="chip chip-out">시스템 설계</span>
+        <span class="chip chip-out">비교 분석</span><span class="chip chip-out">재난 대응</span>
+      </div>
+      <p class="small muted" style="margin:2.5mm 0 0;">담당: 문제 정의 · 시스템 개념 설계 · 약제/재료 비교 검증</p>
+    </div>
+  </div>
+
+  <div class="card dark" style="margin-top:6mm;position:relative;overflow:hidden;">
+    <div class="scan"></div>
+    <span class="tag tag-dark">WHERE IT STARTED · 2024</span>
+    <h3 style="color:#fff;margin-top:3mm;">로스트아크 아이템 강화 비용 계산기 <span class="mono" style="font-size:8pt;color:#8c8475;">(Scratch)</span></h3>
+    <p class="small" style="color:#e8e2d4;margin:2mm 0 0;">
+      1학년 첫 프로그래밍 과제에서 즐겨하던 게임의 <b style="color:#fff;">아이템 강화 시스템(재화·확률·단계)</b>을 직접 분석해
+      목표 레벨까지의 소요 골드를 산출하는 계산기를 구현했습니다. 컴퓨팅 사고와 알고리즘(선택정렬·이진탐색)을 적용한,
+      <b style="color:var(--green-bright);">게임 시스템을 ‘분석하고 설계’하려는 관심의 출발점</b>이었습니다.
+    </p>
+  </div>
+
+  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+</section>
+
+<!-- ============ PAGE 11 · AWARDS ============ -->
+<section class="page grid-bg brackets">
+  <div class="run-head"><span>FILE 04 · AWARDS</span><span>서상호 PORTFOLIO</span></div>
+  <div class="sec-title"><span class="sec-no">04</span><h2>Awards</h2><span class="en">수상 · 선정 내역</span></div>
+
+  <div class="card dark" style="margin-bottom:5mm;position:relative;overflow:hidden;">
+    <div class="scan"></div>
+    <span class="tag tag-dark">GAME INDUSTRY · 2025</span>
+    <h3 style="color:#fff;margin-top:3mm;">대구글로벌게임센터 · 대구게임아카데미 — 우수교육생 선정</h3>
+    <p class="small" style="color:#e8e2d4;margin:2mm 0 0;">
+      게임 분야 전문 교육기관인 <b style="color:#fff;">대구글로벌게임센터 대구게임아카데미</b>의
+      「주니어 개발자를 위한 프로그래밍 필수 개념」 과정에서, <b style="color:var(--green-bright);">출결·태도·성과물 평가 우수자(우수교육생)로 선정</b>되어 특전(IT기기) 포상을 받았습니다.
+    </p>
+  </div>
+
+  <div class="grid2" style="gap:6mm;align-items:start;">
+    <table>
+      <tr><th style="width:14mm;">연도</th><th>수상 · 선정 내역</th><th style="width:24mm;">구분</th></tr>
+      <tr><td class="keycol">2025</td><td><b>대구게임아카데미 우수교육생 선정</b></td><td class="small muted">게임 · 선정</td></tr>
+      <tr><td class="keycol">2026</td><td><b>모두의 아이디어 우수참여자 선정</b> <span class="small muted">(정부·AI)</span></td><td class="small muted">정부 · AI</td></tr>
+      <tr><td class="keycol">2024</td><td><b>전국 창의코딩 경진대회 은상</b></td><td class="small muted">코딩 / 전국</td></tr>
+      <tr><td class="keycol">2025</td><td><b>전국 창의코딩 경진대회 동상</b></td><td class="small muted">코딩 / 전국</td></tr>
+      <tr><td class="keycol">2024</td><td>교내(EPIC) 창의코딩 경진대회 동상</td><td class="small muted">코딩 / 교내</td></tr>
+      <tr><td class="keycol">2026</td><td><b>창의 아이디어 경진대회 동상</b> <span class="small muted">(피싱 필터)</span></td><td class="small muted">아이디어</td></tr>
+    </table>
+    <table>
+      <tr><th style="width:14mm;">연도</th><th>수상 · 선정 내역</th><th style="width:24mm;">구분</th></tr>
+      <tr><td class="keycol">2025</td><td>창의 아이디어 경진대회 입상</td><td class="small muted">아이디어</td></tr>
+      <tr><td class="keycol">2024</td><td>창의 아이디어 경진대회 입상 <span class="small muted">(모듈형 파워스테이션)</span></td><td class="small muted">아이디어</td></tr>
+      <tr><td class="keycol">2025</td><td>미래산업 수요특화형 교육 최우수상 <span class="small muted">(Drawing Machine)</span></td><td class="small muted">창의·제작</td></tr>
+      <tr><td class="keycol">2025</td><td>파란사다리 성과교류회 우수상 <span class="small muted">(교내)</span></td><td class="small muted">발표 · 교류</td></tr>
+      <tr><td class="keycol">2026</td><td>희망사다리 장학생 선정 <span class="small muted">(한국장학재단)</span></td><td class="small muted">장학 · 인재</td></tr>
+      <tr><td class="keycol">2024</td><td>전문기술인재장학금 (장학증서)</td><td class="small muted">장학 · 인재</td></tr>
+    </table>
+  </div>
+  <p class="small muted" style="margin-top:3mm;">※ <b>전국 코딩대회 2년 연속(은상·동상)</b> · <b>아이디어 경진대회 3년 연속 수상</b> · <b>게임아카데미·정부 공모 우수자 선정</b> · 장학생 2회 — 꾸준히 <b>문제를 정의하고 풀어내는 기획 역량</b>을 증명. 상세 증빙은 부록 A 참조.</p>
+
+  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+</section>
+
+<!-- ============ PAGE 10 · CERTIFICATES ============ -->
+<section class="page grid-bg brackets">
+  <div class="run-head"><span>FILE 05 · TRAINING</span><span>서상호 PORTFOLIO</span></div>
+  <div class="sec-title"><span class="sec-no">05</span><h2>Certificates &amp; Training</h2><span class="en">교육 · 자격</span></div>
+
+  <div class="grid2" style="gap:6mm;align-items:start;">
+    <div class="card">
+      <h3 style="color:var(--green);">AI · 데이터</h3>
+      <ul class="clean small">
+        <li>Google AI Essentials</li>
+        <li>Google Prompting Essentials</li>
+        <li>Gemini Academy (Google for Education)</li>
+        <li>[AI-X] 재학생 AI역량 강화 프로그램</li>
+        <li>산업체 수요특화형 AI 교육</li>
+        <li>산업체 수요특화형 빅데이터 교육</li>
+        <li>데이터 가명처리 실습 교육 (대구)</li>
+        <li>파이썬 &amp; OpenCV 컴퓨터 비전 교육</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--green);">제조 · 융합 · 게임</h3>
+      <ul class="clean small">
+        <li><b>주니어 개발자 프로그래밍 필수 개념</b> <span class="muted">(대구게임아카데미)</span></li>
+        <li>3D 프린팅 특화 교육</li>
+        <li>스마트팩토리 분야 특화 교육</li>
+        <li>제주형 스마트팩토리 캠프</li>
+        <li>디자인 씽킹 교육</li>
+        <li>창의적 체험 활동 프로그램</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="grid2" style="gap:6mm;margin-top:6mm;align-items:start;">
+    <div class="card-kraft card">
+      <div class="label" style="margin-bottom:2mm;">자격 · 어학</div>
+      <ul class="clean small">
+        <li><b>Microsoft Excel Expert</b> (Office 2016)</li>
+        <li>리눅스마스터 2급 — 응시</li>
+      </ul>
+    </div>
+    <div class="card" style="border-left:3px solid var(--green);">
+      <p class="small" style="margin:0;">
+        <b>“최신 기술을 빠르게 흡수하는 기획자.”</b><br>
+        생성형 AI·데이터·제조 융합까지 폭넓게 학습하며, 게임 기획에 신기술을 접목할 수 있는 <b>기술 감각</b>을 갖췄습니다.
+      </p>
+    </div>
+  </div>
+
+  <div class="card-kraft card" style="margin-top:6mm;text-align:center;">
+    <span class="mono small muted" style="letter-spacing:.1em;">총 15건+ 교육 수료 · GAME-ACADEMY / AI / DATA / SMART-FACTORY / DESIGN-THINKING</span>
+  </div>
+
+  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+</section>
+
+<!-- ============ PAGE 10 · ACTIVITIES & GLOBAL ============ -->
+<section class="page grid-bg brackets">
+  <div class="run-head"><span>FILE 06 · ACTIVITIES</span><span>서상호 PORTFOLIO</span></div>
+  <div class="sec-title"><span class="sec-no">06</span><h2>Activities &amp; Global</h2><span class="en">대외활동 · 글로벌</span></div>
+
+  <div class="card dark" style="margin-bottom:5mm;position:relative;overflow:hidden;">
+    <div class="scan"></div>
+    <span class="tag tag-dark">GLOBAL · 2025</span>
+    <h3 style="color:#fff;margin-top:3mm;">파란사다리 글로벌 연수 (호주) — 대표학생</h3>
+    <p class="small" style="color:#e8e2d4;margin:2mm 0 0;">
+      연수에 선발돼 수료했고, <b style="color:#fff;">대표학생(반장)</b>으로 현지 운영사를 도와 그룹 운영을 지원했습니다.
+      귀국 후 <b style="color:#fff;">성과교류회 우수상</b> 수상. → 낯선 환경에서의 <b style="color:var(--green-bright);">리더십·조율, 커뮤니케이션</b>.
+    </p>
+  </div>
+
+  <div class="grid2" style="gap:6mm;align-items:start;">
+    <div class="card">
+      <h3 style="color:var(--green);">현장 · 창업 (진행 중)</h3>
+      <ul class="clean small">
+        <li><b>리빙랩</b> (캠퍼스타운 챌린지) — 현장에서 ‘우리가 가정한 문제’와 ‘사용자의 실제 문제’의 괴리를 확인하고 좁혀가는 법을 익히는 중</li>
+        <li><b>실전창업패키지</b> — 창업 실무·기회·도전 요소 교육 (브랜드 전략·솔루션 기획)</li>
+        <li><b>모두의 창업 프로젝트</b> · <b>체험단</b> (GSP)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--green);">학습 · 사회 참여</h3>
+      <ul class="clean small">
+        <li><b>SW 파일럿</b> (대구 DIP, 2025) — 동료 학습·자기주도 학습 방향 정립</li>
+        <li>봉사활동 — 급식·캠프·자연공원 등 (인증)</li>
+        <li>민방위 교육 이수 (2024–2026)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card-kraft card" style="margin-top:5mm;">
+    <p class="small" style="margin:0;"><b>현장에서 배운 ‘문제 정의’.</b> 리빙랩에서 사용자의 실제 문제와 우리 가정 사이의 괴리를 좁히는 법을 익혔습니다.
+    이는 모든 기획의 1단계 — <b>문제를 제대로 정의하는 역량</b>으로 이어집니다.</p>
+  </div>
+
+  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+</section>
+
+<!-- ============ WORK EXPERIENCE ============ -->
+<section class="page grid-bg brackets">
+  <div class="run-head"><span>FILE 07 · WORK EXPERIENCE</span><span>서상호 PORTFOLIO</span></div>
+  <div class="sec-title"><span class="sec-no">07</span><h2>경력</h2><span class="en">WORK EXPERIENCE</span></div>
+
+  <div class="card-kraft card" style="margin-bottom:5mm;">
+    <p class="small" style="margin:0;"><b>기술과 사람, 둘 다 다뤄본 경험.</b>
+    PC 설치·수리, 기술 상담, 앱 헬프데스크로 <b>기술을 이해</b>하고 고객과 직접 소통하며 <b>사용자 관점</b>을 길렀습니다.
+    재학 중 교내 도서관에서 <b>2년 넘게(현재까지) 근무</b> 중이고, 입학 전에도 1년 안팎씩 꾸준히 일한 것이 책임감의 근거입니다. 이 현장 경험이 <b>‘개발자와 같은 언어로 소통하고 사용자를 이해하는’ 기획</b>의 바탕입니다.</p>
+  </div>
+
+  <table>
+    <tr><th style="width:42mm;">근무처</th><th style="width:30mm;">기간</th><th style="width:60mm;">역할</th><th>핵심 경험 · 배운 점</th></tr>
+    <tr><td><b>교내 도서관</b> <span class="small muted">(재학 중 근로)</span></td><td class="keycol" style="color:var(--green);">2024 여름~현재<br><span style="font-size:7.5pt;">약 2년 · 재직 중</span></td><td>도서 대출·반납·정리, 이용자 응대</td><td><b>2년 이상 꾸준히 근속(현재 진행)</b> — 도서관 운영 경험이 ‘작은 도서관’ 웹 프로젝트로 연결</td></tr>
+    <tr><td><b>세원테크</b></td><td class="keycol">약 1년 6개월</td><td>PC 설치·납품·유지보수</td><td>설치/AS <b>스케줄 관리</b>, 현장 대응력</td></tr>
+    <tr><td><b>삼성전자서비스</b></td><td class="keycol">약 1년 3개월</td><td>영상제품 기술상담 · PC/소형가전 수리</td><td>고객 눈높이 기술 설명, 불량 케이스 진단, <b>서비스 마인드</b></td></tr>
+    <tr><td><b>돌보미</b> <span class="small muted">(간병 플랫폼)</span></td><td class="keycol">1년</td><td>간병 앱 헬프데스크 (사용 지원)</td><td>사용법 안내·원격 점검 지원, 이슈 보고 — <b>정확한 내용 전달</b></td></tr>
+    <tr><td><b>대구보훈병원</b> <span class="small muted">(인턴십)</span></td><td class="keycol">5개월</td><td>기계실 — 시설 인턴</td><td>공조냉동기 모니터링, 병원 시설 민원 응대</td></tr>
+    <tr><td><b>㈜티포엘</b></td><td class="keycol">2개월</td><td>측정실 제품 실험 보조원</td><td>제품 측정·실험 보조 — 데이터 취급</td></tr>
+    <tr><td><b>경북기계공업고</b> <span class="small muted">(금형제작과)</span></td><td class="keycol">6개월</td><td>교육지원 실무원</td><td>실습 기자재 관리, 교육 지원</td></tr>
+    <tr><td><b>CU 편의점</b></td><td class="keycol">1년</td><td>진열·납품</td><td>선입선출 재고관리, 성실·꾸준함</td></tr>
+  </table>
+  <p class="small muted" style="margin-top:3mm;">그 외 단기 근무 일부(서비스·유통). &nbsp;→ <b>기술·연구·교육·서비스 전반의 현장 경험</b>이 사용자와 현장을 이해하는 기획의 바탕입니다.</p>
+
+  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+</section>
+
+<!-- ============ SELF STUDY + CLOSING ============ -->
+<section class="page grid-bg brackets">
+  <div class="run-head"><span>FILE 08 · SELF-STUDY</span><span>서상호 PORTFOLIO</span></div>
+  <div class="sec-title"><span class="sec-no">08</span><h2>Self-Directed Learning</h2><span class="en">자기주도 학습</span></div>
+
+  <div class="grid2" style="gap:6mm;align-items:start;">
+    <div class="card" style="border-left:3px solid var(--green);">
+      <h3 style="color:var(--green);">알고리즘 · CS 기초 <span style="font-size:8pt;color:var(--charcoal);background:var(--green-bright);padding:1px 6px;border-radius:2px;" class="mono">→ 수상으로 증명</span></h3>
+      <p class="small">백준 온라인 저지 단계별 학습 (17+ 노트북)</p>
+      <span class="chip chip-out">입출력/사칙연산</span><span class="chip chip-out">정렬</span>
+      <span class="chip chip-out">스택</span><span class="chip chip-out">2차원 배열</span>
+      <span class="chip chip-out">약수·소수</span><span class="chip chip-out">브루트포스</span>
+      <span class="chip chip-out">기하 기초</span><span class="chip chip-out">수학</span>
+      <p class="small" style="margin-top:3mm;"><b>스스로 쌓은 알고리즘 실력으로 「전국 창의코딩 경진대회」에서 2년 연속(은상·동상) 수상</b>했습니다. + 수학올림피아드 문제 풀이로 논리적 사고력 강화.</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--green);">데이터 분석</h3>
+      <p class="small">‘데이터분석과 사례’ 학습 포트폴리오 (목표 A+)를 직접 정리.</p>
+      <ul class="clean small">
+        <li>pandas — Series/DataFrame, 인덱싱, 결측·이상치 처리</li>
+        <li>통계 — 사분위수·상관분석·Z-score</li>
+        <li>시각화 — 막대/원/히스토그램/산점도</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card-kraft card" style="margin-top:6mm;">
+    <p class="small" style="margin:0;"><b>“스스로 공부해서, 결과로 증명한다.”</b> 수업 외 시간에 알고리즘과 데이터 분석을 꾸준히 파고든 노력이
+    <b>전국 단위 코딩대회 2년 연속 수상</b>이라는 성과로 이어졌습니다. 기획에 필요한 <b>수치 감각과 논리적 분해력</b>은 이렇게 쌓았습니다.</p>
+  </div>
+
+  <!-- Closing -->
+  <div style="margin-top:14mm;text-align:center;">
+    <span class="tag">THANK YOU</span>
+    <h2 style="font-size:22pt;margin-top:6mm;">문을 열고, 다음 프로젝트로.</h2>
+    <p class="mono muted" style="letter-spacing:.18em;margin-top:3mm;">OPEN THE DOOR. MANAGE THE ANOMALY.</p>
+    <p class="small" style="max-width:130mm;margin:6mm auto 0;color:var(--charcoal-2);">
+      규칙을 설계하고, 그 규칙이 재미를 만든다는 것을 빌드로 증명하는 일을 계속하고 싶습니다.
+      좋은 동료들과 끝까지 완성하는 게임 기획자가 되겠습니다.
+    </p>
+    <div class="mono small" style="margin-top:10mm;color:var(--muted);line-height:1.9;">
+      서상호 · SEO SANGHO &nbsp;|&nbsp; 영남이공대학교 소프트웨어융합과<br>
+      hirasawa224@gmail.com
+    </div>
+  </div>
+
+  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+</section>
+
+<!-- ============ PAGE 12 · APPENDIX A · AWARDS EVIDENCE ============ -->
+<section class="page grid-bg brackets">
+  <div class="run-head"><span>APPENDIX A · EVIDENCE</span><span>서상호 PORTFOLIO</span></div>
+  <div class="sec-title"><span class="sec-no">A</span><h2>수상 증빙</h2><span class="en">AWARDS · EVIDENCE</span></div>
+  <p class="small muted" style="margin-bottom:3mm;">심사용 출력물을 위해 주요 수상 상장·증서 원본을 첨부합니다. <span class="mono">※ 2025 전국 창의코딩 동상은 수상자 명단(개인정보 포함) 형태라 본문 표기로 갈음합니다.</span></p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:3mm;">
+    <figure style="margin:0;text-align:center;">
+      <div style="border:1px solid var(--line);background:#fff;padding:1.5mm;border-radius:3px;height:60mm;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+        <img src="assets/award_01_전국창의코딩_은상.jpg" style="max-width:100%;max-height:100%;object-fit:contain;">
+      </div>
+      <figcaption class="small" style="margin-top:1.5mm;"><b>전국 창의코딩 은상</b><br><span class="mono muted" style="font-size:7.5pt;">2024 · 전국</span></figcaption>
+    </figure>
+    <figure style="margin:0;text-align:center;">
+      <div style="border:1px solid var(--line);background:#fff;padding:1.5mm;border-radius:3px;height:60mm;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+        <img src="assets/award_03_교내창의코딩_동상.jpg" style="max-width:100%;max-height:100%;object-fit:contain;">
+      </div>
+      <figcaption class="small" style="margin-top:1.5mm;"><b>교내(EPIC) 창의코딩 동상</b><br><span class="mono muted" style="font-size:7.5pt;">2024 · 상장+수료증</span></figcaption>
+    </figure>
+    <figure style="margin:0;text-align:center;">
+      <div style="border:1px solid var(--green);background:#fff;padding:1.5mm;border-radius:3px;height:60mm;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+        <img src="assets/award_08_창의아이디어_동상.jpg" style="max-width:100%;max-height:100%;object-fit:contain;">
+      </div>
+      <figcaption class="small" style="margin-top:1.5mm;"><b>창의 아이디어 동상</b><br><span class="mono muted" style="font-size:7.5pt;">2026 · 피싱 필터</span></figcaption>
+    </figure>
+    <figure style="margin:0;text-align:center;">
+      <div style="border:1px solid var(--line);background:#fff;padding:1.5mm;border-radius:3px;height:60mm;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+        <img src="assets/award_05_아이디어_입상.jpg" style="max-width:100%;max-height:100%;object-fit:contain;">
+      </div>
+      <figcaption class="small" style="margin-top:1.5mm;"><b>창의 아이디어 입상</b><br><span class="mono muted" style="font-size:7.5pt;">2025</span></figcaption>
+    </figure>
+    <figure style="margin:0;text-align:center;">
+      <div style="border:1px solid var(--line);background:#fff;padding:1.5mm;border-radius:3px;height:60mm;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+        <img src="assets/award_04_창의아이디어_입상.jpg" style="max-width:100%;max-height:100%;object-fit:contain;">
+      </div>
+      <figcaption class="small" style="margin-top:1.5mm;"><b>창의 아이디어 입상</b><br><span class="mono muted" style="font-size:7.5pt;">2024 · 모듈형 파워스테이션</span></figcaption>
+    </figure>
+    <figure style="margin:0;text-align:center;">
+      <div style="border:1px solid var(--line);background:#fff;padding:1.5mm;border-radius:3px;height:60mm;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+        <img src="assets/award_06_드로잉머신_최우수상.jpg" style="max-width:100%;max-height:100%;object-fit:contain;">
+      </div>
+      <figcaption class="small" style="margin-top:1.5mm;"><b>미래산업 교육 최우수상</b><br><span class="mono muted" style="font-size:7.5pt;">2025 · Drawing Machine</span></figcaption>
+    </figure>
+    <figure style="margin:0;text-align:center;">
+      <div style="border:1px solid var(--line);background:#fff;padding:1.5mm;border-radius:3px;height:60mm;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+        <img src="assets/award_09_희망사다리_장학증서.jpg" style="max-width:100%;max-height:100%;object-fit:contain;">
+      </div>
+      <figcaption class="small" style="margin-top:1.5mm;"><b>희망사다리 장학증서</b><br><span class="mono muted" style="font-size:7.5pt;">2026 · 한국장학재단</span></figcaption>
+    </figure>
+    <figure style="margin:0;text-align:center;">
+      <div style="border:1px solid var(--line);background:#fff;padding:1.5mm;border-radius:3px;height:60mm;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+        <img src="assets/award_07_전문기술인재장학금.jpg" style="max-width:100%;max-height:100%;object-fit:contain;">
+      </div>
+      <figcaption class="small" style="margin-top:1.5mm;"><b>전문기술인재장학금</b><br><span class="mono muted" style="font-size:7.5pt;">2024 · 장학증서</span></figcaption>
+    </figure>
+  </div>
+
+  <figure style="margin:6mm 0 0;">
+    <div class="label" style="color:var(--green);margin-bottom:2mm;">GAME ACADEMY · 대구게임아카데미 우수교육생 선정 (2025)</div>
+    <div style="border:1px solid var(--line);background:#fff;border-radius:3px;padding:2mm;overflow:hidden;">
+      <img src="assets/award_10_게임아카데미_메일.png" style="width:100%;display:block;">
+    </div>
+    <figcaption class="small muted" style="margin-top:1.5mm;font-size:7.5pt;">선정 통보 메일 — 메디치이앤에스 운영 · 개인정보(이름·이메일) 제외 발췌</figcaption>
+  </figure>
+
+  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+</section>
+
+<!-- ============ PAGE 13 · APPENDIX B · CERTIFICATES (1) ============ -->
+<section class="page grid-bg brackets">
+  <div class="run-head"><span>APPENDIX B · EVIDENCE</span><span>서상호 PORTFOLIO</span></div>
+  <div class="sec-title"><span class="sec-no">B</span><h2>교육·자격 증빙 <span style="font-size:11pt;color:var(--muted);">(1/2)</span></h2><span class="en">CERTIFICATES</span></div>
+
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4mm;">
+    <figure style="margin:0;text-align:center;">
+      <div style="border:1px solid var(--line);background:#fff;padding:1.5mm;border-radius:3px;height:60mm;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="assets/cert_google_ai.jpg" style="max-width:100%;max-height:100%;object-fit:contain;"></div>
+      <figcaption class="small" style="margin-top:1.5mm;">Google AI Essentials</figcaption>
+    </figure>
+    <figure style="margin:0;text-align:center;">
+      <div style="border:1px solid var(--line);background:#fff;padding:1.5mm;border-radius:3px;height:60mm;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="assets/cert_google_prompt.jpg" style="max-width:100%;max-height:100%;object-fit:contain;"></div>
+      <figcaption class="small" style="margin-top:1.5mm;">Google Prompting Essentials</figcaption>
+    </figure>
+    <figure style="margin:0;text-align:center;">
+      <div style="border:1px solid var(--line);background:#fff;padding:1.5mm;border-radius:3px;height:60mm;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="assets/cert_gemini.jpg" style="max-width:100%;max-height:100%;object-fit:contain;"></div>
+      <figcaption class="small" style="margin-top:1.5mm;">Gemini Academy</figcaption>
+    </figure>
+    <figure style="margin:0;text-align:center;">
+      <div style="border:1px solid var(--green);background:#fff;padding:1.5mm;border-radius:3px;height:60mm;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="assets/cert_junior_dev.jpg" style="max-width:100%;max-height:100%;object-fit:contain;"></div>
+      <figcaption class="small" style="margin-top:1.5mm;">주니어 개발자 프로그래밍 필수 개념<br><span class="mono muted" style="font-size:7pt;">대구게임아카데미</span></figcaption>
+    </figure>
+    <figure style="margin:0;text-align:center;">
+      <div style="border:1px solid var(--line);background:#fff;padding:1.5mm;border-radius:3px;height:60mm;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="assets/cert_pseudonym.jpg" style="max-width:100%;max-height:100%;object-fit:contain;"></div>
+      <figcaption class="small" style="margin-top:1.5mm;">데이터 가명처리 실습 교육</figcaption>
+    </figure>
+    <figure style="margin:0;text-align:center;">
+      <div style="border:1px solid var(--line);background:#fff;padding:1.5mm;border-radius:3px;height:60mm;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="assets/cert_ai.jpg" style="max-width:100%;max-height:100%;object-fit:contain;"></div>
+      <figcaption class="small" style="margin-top:1.5mm;">산업체 수요특화형 AI 교육</figcaption>
+    </figure>
+    <figure style="margin:0;text-align:center;">
+      <div style="border:1px solid var(--line);background:#fff;padding:1.5mm;border-radius:3px;height:60mm;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="assets/cert_bigdata.jpg" style="max-width:100%;max-height:100%;object-fit:contain;"></div>
+      <figcaption class="small" style="margin-top:1.5mm;">산업체 수요특화형 빅데이터 교육</figcaption>
+    </figure>
+    <figure style="margin:0;text-align:center;">
+      <div style="border:1px solid var(--line);background:#fff;padding:1.5mm;border-radius:3px;height:60mm;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="assets/cert_opencv.jpg" style="max-width:100%;max-height:100%;object-fit:contain;"></div>
+      <figcaption class="small" style="margin-top:1.5mm;">파이썬 &amp; OpenCV 컴퓨터 비전</figcaption>
+    </figure>
+    <figure style="margin:0;text-align:center;">
+      <div style="border:1px solid var(--line);background:#fff;padding:1.5mm;border-radius:3px;height:60mm;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="assets/cert_ai_역량강화.jpg" style="max-width:100%;max-height:100%;object-fit:contain;"></div>
+      <figcaption class="small" style="margin-top:1.5mm;">[AI-X] 재학생 AI역량 강화</figcaption>
+    </figure>
+  </div>
+
+  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+</section>
+
+<!-- ============ PAGE 14 · APPENDIX B · CERTIFICATES (2) ============ -->
+<section class="page grid-bg brackets">
+  <div class="run-head"><span>APPENDIX B · EVIDENCE</span><span>서상호 PORTFOLIO</span></div>
+  <div class="sec-title"><span class="sec-no">B</span><h2>교육·자격 증빙 <span style="font-size:11pt;color:var(--muted);">(2/2)</span></h2><span class="en">CERTIFICATES</span></div>
+
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4mm;">
+    <figure style="margin:0;text-align:center;">
+      <div style="border:1px solid var(--line);background:#fff;padding:1.5mm;border-radius:3px;height:60mm;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="assets/cert_3dprint.jpg" style="max-width:100%;max-height:100%;object-fit:contain;"></div>
+      <figcaption class="small" style="margin-top:1.5mm;">산업체 수요특화형 3D프린팅 교육</figcaption>
+    </figure>
+    <figure style="margin:0;text-align:center;">
+      <div style="border:1px solid var(--line);background:#fff;padding:1.5mm;border-radius:3px;height:60mm;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="assets/cert_smartfactory_jeju.jpg" style="max-width:100%;max-height:100%;object-fit:contain;"></div>
+      <figcaption class="small" style="margin-top:1.5mm;">제주형 스마트팩토리 캠프</figcaption>
+    </figure>
+    <figure style="margin:0;text-align:center;">
+      <div style="border:1px solid var(--line);background:#fff;padding:1.5mm;border-radius:3px;height:60mm;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="assets/cert_smartfactory.jpg" style="max-width:100%;max-height:100%;object-fit:contain;"></div>
+      <figcaption class="small" style="margin-top:1.5mm;">스마트팩토리 특화교육 이수인정제</figcaption>
+    </figure>
+    <figure style="margin:0;text-align:center;">
+      <div style="border:1px solid var(--line);background:#fff;padding:1.5mm;border-radius:3px;height:60mm;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="assets/cert_designthinking.jpg" style="max-width:100%;max-height:100%;object-fit:contain;"></div>
+      <figcaption class="small" style="margin-top:1.5mm;">디자인 씽킹 교육</figcaption>
+    </figure>
+    <figure style="margin:0;text-align:center;">
+      <div style="border:1px solid var(--line);background:#fff;padding:1.5mm;border-radius:3px;height:60mm;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="assets/cert_creative.jpg" style="max-width:100%;max-height:100%;object-fit:contain;"></div>
+      <figcaption class="small" style="margin-top:1.5mm;">창의적 체험 활동 프로그램</figcaption>
+    </figure>
+    <figure style="margin:0;text-align:center;display:flex;flex-direction:column;justify-content:center;">
+      <div class="card-kraft" style="border:1px solid var(--line);border-radius:3px;height:60mm;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4mm;">
+        <span class="metric"><span class="num" style="color:var(--green);">15+</span><span class="lbl">교육 수료 (총)</span></span>
+        <p class="mono small muted" style="margin-top:3mm;font-size:7.5pt;line-height:1.6;">AI · DATA<br>SMART-FACTORY<br>DESIGN-THINKING</p>
+      </div>
+      <figcaption class="small" style="margin-top:1.5mm;">+ MS Excel Expert (Office 2016)</figcaption>
+    </figure>
+  </div>
+
+  <div style="margin-top:8mm;text-align:center;">
+    <span class="mono small muted" style="letter-spacing:.12em;">— END OF FILE · 괴이탐사국 INSPECTORATE —</span>
+  </div>
+
+  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+</section>
+
+</body>
+</html>
