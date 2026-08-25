@@ -4,8 +4,9 @@
 
 ## 보기 (View)
 
-- **온라인(GitHub Pages):** https://<your-username>.github.io/<repo-name>/
+- **온라인(GitHub Pages):** https://se0sangh0.github.io/portfolio/
 - **PDF 다운로드:** [서상호_포트폴리오.pdf](./서상호_포트폴리오.pdf)
+- **GitHub 프로필:** https://github.com/se0sangh0
 
 > `index.html`을 브라우저로 열어도 동일하게 볼 수 있습니다. (A4 가로 기준 디자인)
 
