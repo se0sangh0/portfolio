@@ -5,20 +5,28 @@
 ## 보기 (View)
 
 - **온라인(GitHub Pages):** https://se0sangh0.github.io/portfolio/
-- **PDF 다운로드:** [서상호_포트폴리오.pdf](./서상호_포트폴리오.pdf)
+- **최신본 PDF 저장:** 온라인 포트폴리오 우측 상단의 `PDF로 저장 / 인쇄` 버튼 → 인쇄 대상에서 `PDF로 저장` 선택
+- **정적 PDF 스냅샷:** [서상호_포트폴리오.pdf](./서상호_포트폴리오.pdf)
 - **GitHub 프로필:** https://github.com/se0sangh0
 
-> `index.html`을 브라우저로 열어도 동일하게 볼 수 있습니다. (A4 가로 기준 디자인)
+> `index.html`이 최신 원본입니다. A4 가로 인쇄 규칙과 PDF 저장 버튼이 포함되어 있어 별도 변환 파일을 매번 만들지 않아도 됩니다.
 
 ## 구성
 
-- **Project** — 괴이탐사국: INSPECTOR(게임 캡스톤·팀장/기획총괄), 피싱 필터(보안 SaaS·2026 동상), 디지털 동반자(AI 에이전트·정부 공모 우수참여자), 차세대 충전 스테이션, 산불 마이크로캡슐 소화기, 작은 도서관(웹)
+- **Project** — 괴이탐사국: INSPECTOR, 피싱 필터, ThermoGuard, ESP32-S3 빗물받이 수위 경보, 디지털 동반자, 차세대 충전 스테이션, 산불 마이크로캡슐 소화기, 작은 도서관
+- **Activities** — SWPilot Robotics의 ROS2 통신 학습과 GUI·로봇 연동 구조 참여
 - **Awards / Certificates / Activities / Work Experience / Self-Study**
 - **Appendix** — 수상·교육 증빙
 
 ## 사용 기술
 
-게임 기획 · 시스템/밸런스 설계 · Unity · C# · Python · Java · JavaScript · C · PHP · MySQL · 데이터 분석 · 생성형 AI
+게임 기획 · 시스템/밸런스 설계 · Unity · C# · Python · FastAPI · MariaDB · ESP32-S3 · ROS2 · Java · JavaScript · PHP · 데이터 분석 · 생성형 AI
+
+## 공개 범위
+
+- ThermoGuard는 실제 현장명·네트워크 주소·장비 식별자·운영 데이터를 제외하고, 합성 데이터 기반 구조도와 본인 기여만 수록합니다.
+- 팀 프로젝트는 Git 이력·활동 문서로 확인되는 역할만 개인 기여로 표시합니다.
+- 현장 운영이나 정량 성능이 확인되지 않은 기능은 후속 과제로 구분합니다.
 
 ## 연락
 
