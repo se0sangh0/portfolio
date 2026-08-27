@@ -31,6 +31,13 @@
   .mono{font-family:"SF Mono",Menlo,Consolas,monospace;}
 
   @page{ size:A4 landscape; margin:0; }
+  .print-actions{position:fixed;right:18px;top:18px;z-index:1000;display:flex;align-items:center;gap:10px;
+    padding:9px 12px;background:rgba(26,28,30,.94);color:var(--kraft-light);border:1px solid #4b4f52;border-radius:5px;
+    box-shadow:0 4px 18px rgba(0,0,0,.22);font-family:"SF Mono",Menlo,monospace;font-size:12px;}
+  .print-actions button{border:1px solid var(--green-bright);background:transparent;color:var(--green-bright);border-radius:3px;
+    padding:6px 10px;font:inherit;font-weight:700;cursor:pointer;}
+  .print-actions button:hover{background:rgba(0,255,102,.1);}
+  @media print{.print-actions{display:none !important;}}
 
   .page{
     position:relative;
@@ -142,9 +149,15 @@
   .small{font-size:8.5pt;}
   .label{font-family:"SF Mono",Menlo,monospace;font-size:7.5pt;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
   .swatch{height:16mm;border-radius:3px;border:1px solid var(--line);margin-bottom:2mm;}
+  .contents-list>div{padding:1.05mm 0 !important;font-size:7.7pt;}
 </style>
 </head>
 <body>
+
+<div class="print-actions" role="region" aria-label="포트폴리오 저장">
+  <span>최신 HTML 기준</span>
+  <button type="button" onclick="window.print()">PDF로 저장 / 인쇄</button>
+</div>
 
 <!-- ============ PAGE 1 · COVER ============ -->
 <section class="page dark grid-bg brackets">
@@ -195,7 +208,7 @@
       </p>
       <p>
         캡스톤에서 3인 팀의 <b>팀장이자 기획 총괄</b>로 신작 「괴이탐사국: INSPECTOR」를 이끌었고,
-        나아가 <b>보안(피싱 필터)·AI(고령층 음성 에이전트)·IoT(충전 스테이션)·웹(도서관)</b>까지
+        나아가 <b>보안(피싱 필터)·산업 모니터링(ThermoGuard)·IoT 리빙랩(빗물받이 수위 경보)·AI·웹</b>까지
         분야를 가리지 않고 직접 시스템을 기획했습니다.
       </p>
       <p>
@@ -208,7 +221,7 @@
       <div class="card-kraft card" style="margin-bottom:5mm;">
         <div class="label" style="margin-bottom:3mm;">CORE STRENGTHS · 핵심 역량</div>
         <ul class="clean small">
-          <li><b>도메인 불문 시스템 기획</b> — 게임·보안·AI·IoT·웹, 문제를 규칙·데이터로 분해·설계</li>
+          <li><b>도메인 불문 시스템 기획</b> — 게임·보안·산업 모니터링·IoT·AI·웹, 문제를 규칙·데이터로 분해·설계</li>
           <li><b>게임 기획·밸런스</b> — 장르 융합, 코어 루프, 데이터 주도(SO/JSON) 확률 통제</li>
           <li><b>브랜딩 · 디렉팅</b> — 세계관·톤앤매너·UX/오디오 시스템 정의</li>
           <li><b>협업 · PM</b> — 팀장, 간트 일정관리, Git 기반 협업</li>
@@ -216,30 +229,32 @@
       </div>
 
       <div class="grid3" style="gap:3mm;text-align:center;">
-        <div class="card"><span class="metric"><span class="num">6</span><span class="lbl">수록 프로젝트</span></span></div>
+        <div class="card"><span class="metric"><span class="num">8</span><span class="lbl">수록 프로젝트</span></span></div>
         <div class="card"><span class="metric"><span class="num">10+</span><span class="lbl">수상 · 선정</span></span></div>
         <div class="card"><span class="metric"><span class="num">15+</span><span class="lbl">교육 수료</span></span></div>
       </div>
     </div>
   </div>
 
-  <div class="sec-title" style="margin-top:9mm;"><span class="sec-no">—</span><h2 style="font-size:15pt;">Contents</h2><span class="en">목차</span></div>
-  <div class="grid2 mono small" style="gap:2mm 10mm;">
+  <div class="sec-title" style="margin-top:6mm;margin-bottom:4mm;"><span class="sec-no">—</span><h2 style="font-size:15pt;">Contents</h2><span class="en">목차</span></div>
+  <div class="grid2 mono small contents-list" style="gap:1mm 10mm;">
     <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">01</span> &nbsp;Skills &amp; Tools · 보유 역량</span><span class="muted">p.03</span></div>
     <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">MAP</span> Project Map · 프로젝트 맵</span><span class="muted">p.04</span></div>
-    <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">04</span> &nbsp;Awards · 수상·선정 내역</span><span class="muted">p.16</span></div>
+    <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">04</span> &nbsp;Awards · 수상·선정 내역</span><span class="muted">p.18</span></div>
     <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">02</span> &nbsp;Project · 괴이탐사국 INSPECTOR</span><span class="muted">p.05</span></div>
-    <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">05</span> &nbsp;Certificates · 교육·자격</span><span class="muted">p.17</span></div>
+    <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">05</span> &nbsp;Certificates · 교육·자격</span><span class="muted">p.19</span></div>
     <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">02.A</span> In-Game Screens · 게임 화면</span><span class="muted">p.09</span></div>
-    <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">06</span> &nbsp;Activities &amp; Global · 활동</span><span class="muted">p.18</span></div>
-    <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">07</span> &nbsp;Work Experience · 경력</span><span class="muted">p.19</span></div>
+    <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">06</span> &nbsp;Activities &amp; Global · 활동</span><span class="muted">p.20</span></div>
+    <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">07</span> &nbsp;Work Experience · 경력</span><span class="muted">p.21</span></div>
     <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">02.B</span> Brand Guideline · 브랜드 기획</span><span class="muted">p.10</span></div>
-    <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">08</span> &nbsp;Self-Study · 자기주도 학습</span><span class="muted">p.20</span></div>
+    <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">08</span> &nbsp;Self-Study · 자기주도 학습</span><span class="muted">p.22</span></div>
     <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">03</span> &nbsp;Project · 피싱 필터 <span class="muted">(2026 동상)</span></span><span class="muted">p.11</span></div>
     <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">03.A</span> Problem &amp; Visuals · 피싱 자료</span><span class="muted">p.13</span></div>
-    <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">A</span> &nbsp;&nbsp;Appendix · 수상 증빙</span><span class="muted">p.21</span></div>
+    <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">03.C</span> ThermoGuard · 산업 열화상 모니터링</span><span class="muted">p.16</span></div>
     <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">03.B</span> Selected Projects · 도메인 시스템 기획</span><span class="muted">p.14</span></div>
-    <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">B</span> &nbsp;&nbsp;Appendix · 교육·자격 증빙</span><span class="muted">p.22</span></div>
+    <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">03.D</span> ESP32 리빙랩 · 수위 경보 시제품</span><span class="muted">p.17</span></div>
+    <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">A</span> &nbsp;&nbsp;Appendix · 수상 증빙</span><span class="muted">p.23</span></div>
+    <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">B</span> &nbsp;&nbsp;Appendix · 교육·자격 증빙</span><span class="muted">p.24</span></div>
   </div>
 
   <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
@@ -268,6 +283,7 @@
         <span class="chip">Unity</span><span class="chip">C#</span><span class="chip">Python</span>
         <span class="chip">Java</span><span class="chip">JavaScript</span><span class="chip">C</span>
         <span class="chip">PHP</span><span class="chip">MySQL</span>
+        <span class="chip">ESP32-S3</span><span class="chip">ROS2</span>
       </div>
       <div class="label" style="margin:3mm 0 2mm;">데이터 · 협업 설계</div>
       <span class="chip chip-out">ScriptableObject</span><span class="chip chip-out">JSON 데이터 설계</span>
@@ -280,7 +296,8 @@
       <h3 style="color:var(--green);">데이터 · AI</h3>
       <ul class="clean small">
         <li>데이터 분석 — pandas, 통계·전처리·시각화</li>
-        <li>컴퓨터 비전 — Python &amp; OpenCV</li>
+        <li>컴퓨터 비전·산업 모니터링 — Python, OpenCV, 열화상 ROI 분석</li>
+        <li>API·데이터 연동 — FastAPI, MariaDB, 상태·알림 이력 설계</li>
         <li>생성형 AI 활용 — Google AI / Prompting Essentials</li>
         <li>빅데이터·가명처리 실무 교육 이수</li>
       </ul>
@@ -289,7 +306,8 @@
       <h3 style="color:var(--green);">도구 · 기타</h3>
       <ul class="clean small">
         <li>MS Office — Excel Expert (Office 2016) 인증</li>
-        <li>3D 프린팅 · 스마트팩토리 · 아두이노/TinkerCAD</li>
+        <li>ESP32-S3 · 플로트 센서 · RGB/부저 상태 경보</li>
+        <li>ROS2 Humble — 노드·토픽 기반 통신 실습</li>
         <li>디자인 씽킹 기반 문제 정의·아이디어 발상</li>
         <li>발표·디렉팅 — 캡스톤 발표 진행</li>
       </ul>
@@ -312,7 +330,7 @@
   <div class="run-head"><span>FILE 01.M · PROJECT MAP</span><span>서상호 PORTFOLIO</span></div>
   <div class="sec-title"><span class="sec-no">MAP</span><h2>프로젝트 맵</h2><span class="en">ONE METHOD · MANY DOMAINS</span></div>
 
-  <p class="small" style="margin-bottom:4mm;"><b>분야가 달라도 좋은 기획의 방식은 같습니다.</b> 6개 프로젝트를 관통하는 한 가지 사고입니다.</p>
+  <p class="small" style="margin-bottom:4mm;"><b>분야가 달라도 좋은 기획의 방식은 같습니다.</b> 8개 프로젝트를 관통하는 한 가지 사고입니다.</p>
 
   <div class="card-kraft card" style="margin-bottom:5mm;">
     <div class="label" style="margin-bottom:2.5mm;">공통 기획 방식 · ONE METHOD</div>
@@ -324,11 +342,13 @@
     </div>
   </div>
 
-  <h3 style="margin-bottom:2.5mm;">6개 도메인, 같은 기획 DNA</h3>
-  <table class="small">
+  <h3 style="margin-bottom:2mm;">8개 프로젝트, 같은 기획 DNA</h3>
+  <table class="small" style="font-size:8.2pt;line-height:1.35;">
     <tr><th style="width:42mm;">프로젝트</th><th style="width:20mm;">도메인</th><th>핵심 시스템 기획</th><th style="width:44mm;">역할 · 성과</th></tr>
     <tr><td><b>괴이탐사국 INSPECTOR</b></td><td class="keycol">게임</td><td>간접 전투·덱·동료 성향·밸런스 시스템</td><td class="small">팀장·총괄 / 캡스톤 MVP</td></tr>
     <tr><td><b>피싱 필터</b></td><td class="keycol">보안 SaaS</td><td>3단 레이어 방어 파이프라인·수익모델</td><td class="small">기획·PM / 2026 동상</td></tr>
+    <tr><td><b>ThermoGuard</b></td><td class="keycol">산업·비전</td><td>열화상 ROI 분석·GUI·API/DB·알림 흐름</td><td class="small">GUI·카메라·연동 안정화 기여</td></tr>
+    <tr><td><b>빗물받이 수위 경보</b></td><td class="keycol">IoT·리빙랩</td><td>2단 플로트 감지·RGB/부저 단계 경보</td><td class="small">센서 설계·제작·동작 검증</td></tr>
     <tr><td><b>디지털 동반자</b></td><td class="keycol">AI 에이전트</td><td>음성 에이전트·복지/안전 연계 시스템</td><td class="small">기획 / 정부 우수참여자</td></tr>
     <tr><td><b>차세대 모듈형 충전 스테이션</b></td><td class="keycol">IoT · 제품</td><td>모듈 적층·자동 전력 배분·IoT 모니터링</td><td class="small">제품기획(팀) / 2024 입상</td></tr>
     <tr><td><b>산불 마이크로캡슐 소화기</b></td><td class="keycol">재난 · 제품</td><td>고온 감응 작동·약제/재료 비교 설계</td><td class="small">기획 / 2025 입상</td></tr>
@@ -939,6 +959,143 @@
   <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
 </section>
 
+<!-- ============ THERMOGUARD ============ -->
+<section class="page grid-bg brackets">
+  <div class="run-head"><span>FILE 03.C · INDUSTRIAL MONITORING</span><span>THERMOGUARD</span></div>
+  <div class="sec-title" style="margin-bottom:4mm;"><span class="sec-no">03.C</span><h2>ThermoGuard</h2><span class="en">THERMAL MONITORING · MY CONTRIBUTION</span></div>
+
+  <div class="grid2" style="gap:6mm;align-items:start;">
+    <div>
+      <span class="tag">2026 · 팀 프로젝트 · 산업 모니터링</span>
+      <h3 style="font-size:15pt;margin-top:3mm;">열화상 카메라 기반 로봇 상태 모니터링 시제품</h3>
+      <p class="small" style="margin-top:2mm;">FLIR A50의 열화상·가시광 이미지를 수집해 ROI별 온도와 핫스팟을 분석하고,
+      상태를 Dashboard에 표시한 뒤 FastAPI·MariaDB와 알림 이력으로 연결하는 프로젝트입니다.</p>
+      <div style="margin-top:3mm;">
+        <span class="chip chip-out">Python / Tk</span><span class="chip chip-out">FLIR A50</span>
+        <span class="chip chip-out">FastAPI</span><span class="chip chip-out">MariaDB</span>
+      </div>
+    </div>
+
+    <div class="card dark" style="position:relative;overflow:hidden;min-height:35mm;padding:4mm;">
+      <div class="scan"></div>
+      <div class="label" style="color:#8c8475;margin-bottom:3mm;">PUBLIC MOCKUP · SYNTHETIC DATA</div>
+      <div style="display:grid;grid-template-columns:1.2fr .8fr;gap:3mm;align-items:stretch;">
+        <div style="border:1px solid #474b4f;padding:3mm;border-radius:3px;">
+          <div class="mono" style="color:#fff;font-size:8pt;">ROI-A · 42.6°C</div>
+          <div style="height:13mm;margin-top:2mm;background:linear-gradient(135deg,#1f2940,#5b3f66,#e66c3a,#f3d55b);border-radius:2px;position:relative;">
+            <div style="position:absolute;left:28%;top:22%;width:42%;height:55%;border:1.5px solid var(--green-bright);"></div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:2mm;">
+          <div style="flex:1;border:1px solid #3a3d40;padding:2mm;border-radius:3px;"><span class="mono" style="color:#8c8475;font-size:7pt;">CAMERA</span><br><b style="color:var(--green-bright);">CONNECTED</b></div>
+          <div style="flex:1;border:1px solid #3a3d40;padding:2mm;border-radius:3px;"><span class="mono" style="color:#8c8475;font-size:7pt;">STATUS</span><br><b style="color:#fff;">WARNING</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-title" style="margin-top:4mm;margin-bottom:3mm;"><span class="sec-no">MY</span><h2 style="font-size:15pt;">제가 진행한 부분</h2><span class="en">ROLE · PROBLEM SOLVING</span></div>
+  <div class="grid2" style="gap:4mm;align-items:stretch;">
+    <div class="card" style="border-left:3px solid var(--green);padding:3.5mm;">
+      <h3>01 · 통합 GUI</h3>
+      <p class="small" style="margin:0;">캘리브레이션·ROI 설정·모니터링·이벤트 확인을 한 화면 흐름으로 묶고,
+      Dashboard의 중복 코드를 정리해 기존 모듈을 재사용하도록 개선했습니다.</p>
+    </div>
+    <div class="card" style="border-left:3px solid var(--green);padding:3.5mm;">
+      <h3>02 · GigE 카메라 연결</h3>
+      <p class="small" style="margin:0;">GigE 카메라 연결 경로를 구현·적용 시험하고, 연결 상태를 화면과 운영 로그에서
+      같은 기준으로 확인할 수 있도록 상태 메시지를 정리했습니다.</p>
+    </div>
+    <div class="card" style="border-left:3px solid var(--green);padding:3.5mm;">
+      <h3>03 · API·DB 연동 안정화</h3>
+      <p class="small" style="margin:0;">캡처 URL을 별도 함수로 분리하고 누락 API와 연동 테스트를 보강했습니다.
+      Normal 데이터 적재 정책과 중복 수집 경로를 추적해 운영 진입점을 Dashboard로 정리했습니다.</p>
+    </div>
+    <div class="card" style="border-left:3px solid var(--green);padding:3.5mm;">
+      <h3>04 · 데이터·운영 로그 정리</h3>
+      <p class="small" style="margin:0;">흩어진 로그 구분값을 그룹화하고, 이미지 저장 파싱과 Normal 이미지 쌍 정리 흐름을
+      개선해 장애 원인을 추적하기 쉬운 구조로 다듬었습니다.</p>
+    </div>
+  </div>
+
+  <div class="card-kraft card" style="margin-top:3mm;padding:3mm 4mm;">
+    <p class="small mono" style="margin:0;text-align:center;"><b>FLIR 수집</b> → <b>ROI 분석</b> → <b>상태 판정</b> → <b>API·DB·Telegram</b></p>
+    <p class="small muted" style="margin:1.5mm 0 0;text-align:center;font-size:7.6pt;">소스·Git 이력·회귀 테스트 기준. 실제 현장명·IP·장비 식별자·운영 데이터는 공개본에서 제외했습니다.</p>
+  </div>
+
+  <div class="run-foot"><span>SEO SANGHO · SAFE PUBLIC EDITION</span><span class="pageno"></span></div>
+</section>
+
+<!-- ============ ESP32 LIVING LAB ============ -->
+<section class="page grid-bg brackets">
+  <div class="run-head"><span>FILE 03.D · LIVING LAB PROTOTYPE</span><span>ESP32-S3 WATER-LEVEL ALERT</span></div>
+  <div class="sec-title" style="margin-bottom:4mm;"><span class="sec-no">03.D</span><h2>빗물받이 수위 경보 시제품</h2><span class="en">ESP32-S3 · MY CONTRIBUTION</span></div>
+
+  <div class="grid2" style="gap:7mm;align-items:start;">
+    <div>
+      <span class="tag">2026 캠퍼스타운챌린지 리빙랩 1기</span>
+      <h3 style="font-size:15pt;margin-top:3mm;">골목 빗물받이의 배수 지연을 단계 경보로 확인</h3>
+      <p class="small" style="margin-top:2mm;">대구 남구 골목의 빗물받이 이물질·악취·물고임 문제를 조사하고,
+      플로트 센서 2개로 수위 단계를 감지해 RGB LED와 부저로 현장 상태를 표시하는 시제품을 만들었습니다.</p>
+    </div>
+    <div class="card-kraft card" style="padding:4mm;">
+      <div class="label" style="margin-bottom:3mm;">PROJECT BOUNDARY · 검증 범위</div>
+      <p class="small" style="margin:0;"><b>완료:</b> 단계별 수위 감지와 현장 RGB·부저 경보 동작<br>
+      <b>관찰:</b> 실험 범위 내 이물질이 많은 조건에서 배수 지연·높은 수위 유지 경향<br>
+      <b>후속:</b> 방수·전원·통신·서버 기록을 포함한 현장 운영 및 정량 성능 검증</p>
+    </div>
+  </div>
+
+  <div class="sec-title" style="margin-top:5mm;margin-bottom:3mm;"><span class="sec-no">MY</span><h2 style="font-size:15pt;">제가 진행한 부분</h2><span class="en">FROM FIELD QUESTION TO WORKING PROTOTYPE</span></div>
+  <div class="grid3" style="gap:4mm;align-items:stretch;">
+    <div class="card" style="border-top:3px solid var(--green);padding:3.5mm;">
+      <div class="label">01 · 문제 정의</div>
+      <h3 style="margin-top:2mm;">현장 인터뷰 기록</h3>
+      <p class="small" style="margin:0;">상인·행정 실무자 의견을 기록하고, 단순 쓰레기 유입 방지보다
+      <b>배수 상태를 빠르게 확인하는 방법</b>으로 시제품 범위를 좁혔습니다.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--green);padding:3.5mm;">
+      <div class="label">02 · 설계·제작</div>
+      <h3 style="margin-top:2mm;">2단 플로트 경보</h3>
+      <p class="small" style="margin:0;">ESP32-S3 내부 풀업 입력에 플로트 센서 2개를 연결하고,
+      RGB LED·부저·약 0.5초 디바운싱으로 단계 경보 로직을 구현했습니다.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--green);padding:3.5mm;">
+      <div class="label">03 · 검증</div>
+      <h3 style="margin-top:2mm;">빌드·플래시·상태 전환</h3>
+      <p class="small" style="margin:0;">ESP-IDF 5.5.4로 ESP32-S3 대상 빌드·플래시를 수행하고,
+      실제 입력 로그에서 <b>0 → 1 → 2 → 1</b> 단계 전환을 확인했습니다.</p>
+    </div>
+  </div>
+
+  <div class="grid3" style="gap:4mm;margin-top:4mm;text-align:center;">
+    <div class="card" style="border-color:#3a9b55;padding:3mm;">
+      <div style="width:13mm;height:13mm;background:#23a455;border-radius:50%;margin:0 auto 1mm;"></div>
+      <b>0개 감지 · GREEN</b><br><span class="small muted">평상 상태</span>
+    </div>
+    <div class="card" style="border-color:#d28c29;padding:3mm;">
+      <div style="width:13mm;height:13mm;background:#e59b2f;border-radius:50%;margin:0 auto 1mm;"></div>
+      <b>1개 감지 · ORANGE</b><br><span class="small muted">수위 상승</span>
+    </div>
+    <div class="card" style="border-color:#c63f3f;padding:3mm;">
+      <div style="width:13mm;height:13mm;background:#d64545;border-radius:50%;margin:0 auto 1mm;"></div>
+      <b>2개 감지 · RED</b><br><span class="small muted">간헐 부저 경보</span>
+    </div>
+  </div>
+
+  <div class="card dark" style="margin-top:4mm;position:relative;overflow:hidden;padding:3mm 4mm;">
+    <div class="scan"></div>
+    <div class="grid2" style="gap:5mm;align-items:center;">
+      <p class="small" style="color:#e8e2d4;margin:0;"><b style="color:#fff;">실험 결과</b><br>동일한 방식으로 물을 투입한 비교 실험에서,
+      이물질이 많은 조건일수록 배수가 늦고 내부 수위가 높게 유지되는 <b style="color:var(--green-bright);">경향</b>을 관찰했습니다.</p>
+      <p class="small" style="color:#8c8475;margin:0;"><b style="color:#fff;">과장하지 않은 결론</b><br>시제품은 적치량·유량을 직접 측정하거나
+      서버로 전송한 시스템이 아닙니다. 현장 설치와 정량 성능은 후속 실증 범위입니다.</p>
+    </div>
+  </div>
+
+  <div class="run-foot"><span>SEO SANGHO · SENSOR DESIGN &amp; VERIFICATION</span><span class="pageno"></span></div>
+</section>
+
 <!-- ============ PAGE 11 · AWARDS ============ -->
 <section class="page grid-bg brackets">
   <div class="run-head"><span>FILE 04 · AWARDS</span><span>서상호 PORTFOLIO</span></div>
@@ -1051,26 +1208,26 @@
 
   <div class="grid2" style="gap:6mm;align-items:start;">
     <div class="card">
-      <h3 style="color:var(--green);">현장 · 창업 (진행 중)</h3>
+      <h3 style="color:var(--green);">SWPilot Robotics · 2026</h3>
       <ul class="clean small">
-        <li><b>리빙랩</b> (캠퍼스타운 챌린지) — 현장에서 ‘우리가 가정한 문제’와 ‘사용자의 실제 문제’의 괴리를 확인하고 좁혀가는 법을 익히는 중</li>
-        <li><b>실전창업패키지</b> — 창업 실무·기회·도전 요소 교육 (브랜드 전략·솔루션 기획)</li>
-        <li><b>모두의 창업 프로젝트</b> · <b>체험단</b> (GSP)</li>
+        <li><b>ROS2 Humble</b> — talker/listener로 DDS 기반 <span class="mono">/chatter</span> 토픽 통신 확인</li>
+        <li><b>turtlesim</b> — publisher/subscriber 관계와 노드·토픽 구조 문서화</li>
+        <li><b>기초 학습</b> — 모터·바퀴·센서·엔코더·차동 구동 구조 정리</li>
       </ul>
     </div>
     <div class="card">
-      <h3 style="color:var(--green);">학습 · 사회 참여</h3>
+      <h3 style="color:var(--green);">재난환경 탐사·수거 로봇 · 팀 프로젝트</h3>
       <ul class="clean small">
-        <li><b>SW 파일럿</b> (대구 DIP, 2025) — 동료 학습·자기주도 학습 방향 정립</li>
-        <li>봉사활동 — 급식·캠프·자연공원 등 (인증)</li>
-        <li>민방위 교육 이수 (2024–2026)</li>
+        <li><b>GUI 흐름 참여</b> — 지도·카메라·상태 확인 후 블럭 선택과 목적지 명령이 이어지는 운용 흐름 검토</li>
+        <li><b>연동 구조 학습</b> — 일반 웹 API가 아닌 ROS2 Topic·TF·Action 기반 로봇-노트북 통신</li>
+        <li><b>안정성 관점</b> — USB 절전, 카메라 프레임 중단, Nav2 초기 실패, 통신 잔재 등 장애 사례와 복구 절차 정리</li>
       </ul>
     </div>
   </div>
 
   <div class="card-kraft card" style="margin-top:5mm;">
-    <p class="small" style="margin:0;"><b>현장에서 배운 ‘문제 정의’.</b> 리빙랩에서 사용자의 실제 문제와 우리 가정 사이의 괴리를 좁히는 법을 익혔습니다.
-    이는 모든 기획의 1단계 — <b>문제를 제대로 정의하는 역량</b>으로 이어집니다.</p>
+    <p class="small" style="margin:0;"><b>제가 가져간 핵심.</b> 기능 하나를 만드는 것보다 센서·주행·인식·GUI·통신이
+    한 흐름으로 연결되고, 끊겼을 때 다시 확인할 수 있어야 실제 운용이 됩니다. 개인 성과로 확인되지 않은 팀 성능 수치는 포트폴리오에서 제외했습니다.</p>
   </div>
 
   <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
