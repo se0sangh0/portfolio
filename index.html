@@ -38,21 +38,42 @@
     padding:6px 10px;font:inherit;font-weight:700;cursor:pointer;}
   .print-actions button:hover{background:rgba(0,255,102,.1);}
   @media print{.print-actions{display:none !important;}}
+  .layout-warning{display:none;position:fixed;left:18px;right:18px;bottom:18px;z-index:1200;padding:10px 14px;
+    background:#8b1d1d;color:#fff;border:1px solid #ff8f8f;border-radius:5px;font:12px/1.45 "SF Mono",Menlo,monospace;}
+  html.layout-check .layout-warning:not([hidden]){display:block;}
+  html.layout-check .page[data-layout-status="error"]{outline:3px solid #e23d3d;outline-offset:-3px;}
 
   .page{
     position:relative;
     width:297mm;
     height:210mm;
-    padding:13mm 18mm 12mm 18mm;
+    padding:15mm 18mm 14mm 18mm;
     overflow:hidden;
     page-break-after:always;
     background:var(--paper);
-    display:flex;
-    flex-direction:column;
-    justify-content:center;   /* 가로: 본문을 세로 중앙 정렬해 빈 공간 균형 */
+    display:block;
   }
   .page:last-child{page-break-after:auto;}
-  /* 절대배치 자식(러닝헤더/풋터/스탬프)은 플렉스 영향 없음 */
+  .page-body{
+    width:100%;
+    height:100%;
+    min-height:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+  }
+  .page-flow{
+    width:100%;
+    flex:0 0 auto;
+    transform-origin:top left;
+  }
+  .awards-evidence figure>div[style*="height:60mm"]{height:42mm !important;}
+  .awards-evidence figcaption{margin-top:1mm !important;font-size:7.5pt;}
+  .awards-evidence>figure{margin-top:3mm !important;}
+  .awards-evidence>figure>div{height:27mm;display:flex;align-items:center;justify-content:center;}
+  .awards-evidence>figure>div img{width:auto !important;max-width:100%;max-height:100%;object-fit:contain;}
+  /* 본문은 page-body 안전 영역 안에서만 배치하고, 머리글·바닥글은 별도 레이어로 유지 */
 
   /* faint grid background */
   .grid-bg::before{
@@ -158,11 +179,14 @@
   <span>최신 HTML 기준</span>
   <button type="button" onclick="window.print()">PDF로 저장 / 인쇄</button>
 </div>
+<div class="layout-warning" id="layout-warning" role="alert" hidden></div>
 
 <!-- ============ PAGE 1 · COVER ============ -->
 <section class="page dark grid-bg brackets">
   <div class="scan"></div>
   <div class="run-head"><span>INSPECTORATE · PORTFOLIO FILE</span><span>2026</span></div>
+  <div class="page-body">
+    <div class="page-flow">
 
   <div style="max-width:235mm;">
     <span class="tag tag-dark">GAME · SYSTEM PLANNER · 게임 · 시스템 기획</span>
@@ -189,11 +213,16 @@
       OPEN THE DOOR.<br>MANAGE THE ANOMALY.
     </div>
   </div>
+
+    </div>
+  </div>
 </section>
 
 <!-- ============ PAGE 2 · ABOUT + CONTENTS ============ -->
 <section class="page grid-bg brackets">
   <div class="run-head"><span>FILE 00 · PROFILE</span><span>서상호 PORTFOLIO</span></div>
+  <div class="page-body">
+    <div class="page-flow">
 
   <div class="sec-title"><span class="sec-no">00</span><h2>About Me</h2><span class="en">PROFILE / 자기소개</span></div>
 
@@ -257,12 +286,17 @@
     <div style="display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:1.6mm 0;"><span><span style="color:var(--green);">B</span> &nbsp;&nbsp;Appendix · 교육·자격 증빙</span><span class="muted">p.24</span></div>
   </div>
 
-  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+
+    </div>
+  </div>
+<div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
 </section>
 
 <!-- ============ PAGE 3 · SKILLS ============ -->
 <section class="page grid-bg brackets">
   <div class="run-head"><span>FILE 01 · CAPABILITIES</span><span>서상호 PORTFOLIO</span></div>
+  <div class="page-body">
+    <div class="page-flow">
   <div class="sec-title"><span class="sec-no">01</span><h2>Skills &amp; Tools</h2><span class="en">보유 역량</span></div>
 
   <div class="grid2" style="gap:6mm;align-items:start;">
@@ -322,12 +356,17 @@
     </p>
   </div>
 
-  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+
+    </div>
+  </div>
+<div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
 </section>
 
 <!-- ============ PROJECT MAP ============ -->
 <section class="page grid-bg brackets">
   <div class="run-head"><span>FILE 01.M · PROJECT MAP</span><span>서상호 PORTFOLIO</span></div>
+  <div class="page-body">
+    <div class="page-flow">
   <div class="sec-title"><span class="sec-no">MAP</span><h2>프로젝트 맵</h2><span class="en">ONE METHOD · MANY DOMAINS</span></div>
 
   <p class="small" style="margin-bottom:4mm;"><b>분야가 달라도 좋은 기획의 방식은 같습니다.</b> 8개 프로젝트를 관통하는 한 가지 사고입니다.</p>
@@ -360,13 +399,18 @@
     빌드·수상·정부 선정 등 <b>작동하는 결과물</b>로 이어갔습니다.</p>
   </div>
 
-  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+
+    </div>
+  </div>
+<div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
 </section>
 
 <!-- ============ PAGE 4 · PROJECT 01 OVERVIEW ============ -->
 <section class="page dark grid-bg brackets">
   <div class="scan"></div>
   <div class="run-head"><span>FILE 02 · FLAGSHIP PROJECT</span><span>TEAM 578</span></div>
+  <div class="page-body">
+    <div class="page-flow">
   <div class="stamp" style="top:20mm;right:20mm;">FLAGSHIP</div>
 
   <div style="margin-top:6mm;">
@@ -418,12 +462,17 @@
     </div>
   </div>
 
-  <div class="run-foot"><span>OPEN THE DOOR. MANAGE THE ANOMALY.</span><span class="pageno"></span></div>
+
+    </div>
+  </div>
+<div class="run-foot"><span>OPEN THE DOOR. MANAGE THE ANOMALY.</span><span class="pageno"></span></div>
 </section>
 
 <!-- ============ PAGE 5 · PROJECT 01 SYSTEM DESIGN ============ -->
 <section class="page grid-bg brackets">
   <div class="run-head"><span>FILE 02 · SYSTEM DESIGN</span><span>괴이탐사국 INSPECTOR</span></div>
+  <div class="page-body">
+    <div class="page-flow">
   <div class="sec-title"><span class="sec-no">02</span><h2>기획 의도 &amp; 시스템 설계</h2><span class="en">DESIGN INTENT</span></div>
 
   <div class="card-kraft card" style="margin-bottom:5mm;">
@@ -465,12 +514,17 @@
   </table>
   <p class="small muted" style="margin-top:2mm;">→ 모든 성향의 기대값은 동일하게 맞추고 ‘변동 폭’만 다르게 설계. 어떤 성향을 편성하느냐로 <b>운의 크기 자체를 고르는</b> 구조 = 운을 ‘관리’하는 전략.</p>
 
-  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+
+    </div>
+  </div>
+<div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
 </section>
 
 <!-- ============ PROJECT 02 · 시스템 수치 & 밸런스 ============ -->
 <section class="page grid-bg brackets">
   <div class="run-head"><span>FILE 02 · SYSTEM DATA</span><span>괴이탐사국 INSPECTOR</span></div>
+  <div class="page-body">
+    <div class="page-flow">
   <div class="sec-title"><span class="sec-no">02</span><h2>시스템 수치 &amp; 밸런스</h2><span class="en">DATA &amp; BALANCE</span></div>
 
   <p class="small muted" style="margin-bottom:5mm;">기획의 핵심은 ‘수치로 의도를 통제하는 것’. 아래는 INSPECTOR의 주요 밸런스 규칙을 수치로 정리한 것입니다.</p>
@@ -531,12 +585,17 @@
     <p class="small muted" style="margin:3mm 0 0;">고정 6단계 시퀀스(시작→전투→용병소→전투→화톳불→보스)를 안정적으로 완주하며 <b>코어 루프 정상 동작을 검증</b>하는 데 집중.</p>
   </div>
 
-  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+
+    </div>
+  </div>
+<div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
 </section>
 
 <!-- ============ PAGE 6 · PROJECT 01 CONTENT + SCHEDULE + CONTRIBUTION ============ -->
 <section class="page grid-bg brackets">
   <div class="run-head"><span>FILE 02 · CONTENT &amp; PROCESS</span><span>괴이탐사국 INSPECTOR</span></div>
+  <div class="page-body">
+    <div class="page-flow">
   <div class="sec-title"><span class="sec-no">02</span><h2>콘텐츠 · 개발 과정 · 기여</h2><span class="en">CONTENT / PROCESS</span></div>
 
   <div class="grid2" style="gap:6mm;align-items:start;">
@@ -590,12 +649,17 @@
     덕분에 차질 없이 계획한 대로 MVP를 완성했습니다.</p>
   </div>
 
-  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+
+    </div>
+  </div>
+<div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
 </section>
 
 <!-- ============ PROJECT 02 · IN-GAME SCREENS ============ -->
 <section class="page grid-bg brackets">
   <div class="run-head"><span>FILE 02.A · IN-GAME SCREENS</span><span>괴이탐사국 INSPECTOR</span></div>
+  <div class="page-body">
+    <div class="page-flow">
   <div class="sec-title"><span class="sec-no">02.A</span><h2>게임 화면</h2><span class="en">IN-GAME SCREENS</span></div>
 
   <!-- 타이틀 배너 -->
@@ -634,12 +698,17 @@
 
   <p class="small mono muted" style="margin-top:5mm;border-top:1px solid var(--line);padding-top:3mm;text-align:center;">실제 Unity 빌드(MVP) 화면 — 동료 5종 · 적 3종 · 노드 4종으로 코어 루프 완주 검증</p>
 
-  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+
+    </div>
+  </div>
+<div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
 </section>
 
 <!-- ============ PAGE · PROJECT 02 BRAND ============ -->
 <section class="page grid-bg brackets">
   <div class="run-head"><span>FILE 02.B · BRAND DIRECTION</span><span>괴이탐사국 INSPECTOR</span></div>
+  <div class="page-body">
+    <div class="page-flow">
   <div class="sec-title"><span class="sec-no">02.B</span><h2>브랜드 마스터 가이드북</h2><span class="en">BRAND &amp; DESIGN SYSTEM</span></div>
 
   <p class="small muted" style="margin-bottom:5mm;">게임 시스템을 넘어, 하나의 <b>브랜드</b>로서 일관된 정체성을 정의했습니다. 전략·페르소나·비주얼·UX·오디오까지 아우르는 마스터 가이드북을 직접 작성했습니다.</p>
@@ -691,13 +760,18 @@
     ※ 본 포트폴리오 전체가 INSPECTOR 브랜드 시스템(Charcoal / Kraft / Phosphor Green · 모노스페이스 · 브래킷 프레임)으로 디자인되었습니다.
   </p>
 
-  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+
+    </div>
+  </div>
+<div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
 </section>
 
 <!-- ============ PAGE 8 · PROJECT 03 · 피싱필터 OVERVIEW ============ -->
 <section class="page dark grid-bg brackets">
   <div class="scan" style="background:repeating-linear-gradient(0deg,rgba(91,120,255,.05) 0 1px,transparent 1px 4px);"></div>
   <div class="run-head"><span>FILE 03 · KEY PROJECT</span><span>PHISHING FILTER</span></div>
+  <div class="page-body">
+    <div class="page-flow">
   <div class="stamp" style="top:20mm;right:20mm;border-color:#5b78ff;color:#5b78ff;">AWARD 2026</div>
 
   <div style="margin-top:6mm;">
@@ -748,12 +822,17 @@
     </div>
   </div>
 
-  <div class="run-foot"><span>WE PROTECT WHAT MATTERS.</span><span class="pageno"></span></div>
+
+    </div>
+  </div>
+<div class="run-foot"><span>WE PROTECT WHAT MATTERS.</span><span class="pageno"></span></div>
 </section>
 
 <!-- ============ PAGE 9 · PROJECT 03 · 피싱필터 SYSTEM & BUSINESS ============ -->
 <section class="page grid-bg brackets">
   <div class="run-head"><span>FILE 03 · SYSTEM &amp; BUSINESS</span><span>피싱 필터 PHISHING FILTER</span></div>
+  <div class="page-body">
+    <div class="page-flow">
   <div class="sec-title"><span class="sec-no">03</span><h2>아키텍처 &amp; 사업화</h2><span class="en">3-LAYER / BUSINESS</span></div>
 
   <h3 style="margin-bottom:3mm;">3단 레이어 방어 파이프라인</h3>
@@ -811,12 +890,17 @@
     ※ 「피싱 필터」는 <b>창의 아이디어 경진대회 3년 연속 수상</b>(2024 입상 → 2025 입상 → <b>2026 동상</b>)의 결실로, 문제 정의부터 기술 아키텍처·사업화까지 기획 전 과정을 다뤘습니다.
   </p>
 
-  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+
+    </div>
+  </div>
+<div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
 </section>
 
 <!-- ============ PROJECT 03 · 피싱필터 문제 & 시각자료 ============ -->
 <section class="page grid-bg brackets">
   <div class="run-head"><span>FILE 03.A · PROBLEM &amp; VISUALS</span><span>피싱 필터 PHISHING FILTER</span></div>
+  <div class="page-body">
+    <div class="page-flow">
   <div class="sec-title"><span class="sec-no">03.A</span><h2>문제 인식 &amp; 자료</h2><span class="en">PROBLEM &amp; VISUALS</span></div>
 
   <div class="grid2" style="gap:5mm;align-items:start;margin-bottom:4mm;">
@@ -843,12 +927,17 @@
 
   <p class="small mono muted" style="margin-top:5mm;border-top:1px solid var(--line);padding-top:3mm;text-align:center;">실제 발표 자료(2026 창의 아이디어 경진대회) — 한국인터넷진흥원 피싱 URL 데이터 기반 설계</p>
 
-  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+
+    </div>
+  </div>
+<div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
 </section>
 
 <!-- ============ OTHER PROJECTS (1/2) ============ -->
 <section class="page grid-bg brackets">
   <div class="run-head"><span>FILE 03.B · SELECTED PROJECTS</span><span>서상호 PORTFOLIO</span></div>
+  <div class="page-body">
+    <div class="page-flow">
   <div class="sec-title"><span class="sec-no">03.B</span><h2>도메인 시스템 기획 <span style="font-size:11pt;color:var(--muted);">(1/2)</span></h2><span class="en">AI &amp; DEV</span></div>
 
   <!-- 디지털 동반자 -->
@@ -903,12 +992,17 @@
     <p class="small muted" style="margin:2.5mm 0 0;">담당: 기획·DB 설계·백엔드 개발 전 과정 (단독)</p>
   </div>
 
-  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+
+    </div>
+  </div>
+<div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
 </section>
 
 <!-- ============ OTHER PROJECTS (2/2) ============ -->
 <section class="page grid-bg brackets">
   <div class="run-head"><span>FILE 03.B · SELECTED PROJECTS</span><span>서상호 PORTFOLIO</span></div>
+  <div class="page-body">
+    <div class="page-flow">
   <div class="sec-title"><span class="sec-no">03.B</span><h2>도메인 시스템 기획 <span style="font-size:11pt;color:var(--muted);">(2/2)</span></h2><span class="en">PRODUCT &amp; GAME</span></div>
 
   <div class="grid2" style="gap:5mm;align-items:start;">
@@ -956,12 +1050,17 @@
     </p>
   </div>
 
-  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+
+    </div>
+  </div>
+<div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
 </section>
 
 <!-- ============ THERMOGUARD ============ -->
 <section class="page grid-bg brackets">
   <div class="run-head"><span>FILE 03.C · INDUSTRIAL MONITORING</span><span>THERMOGUARD</span></div>
+  <div class="page-body">
+    <div class="page-flow">
   <div class="sec-title" style="margin-bottom:4mm;"><span class="sec-no">03.C</span><h2>ThermoGuard</h2><span class="en">THERMAL MONITORING · MY CONTRIBUTION</span></div>
 
   <div class="grid2" style="gap:6mm;align-items:start;">
@@ -1023,12 +1122,17 @@
     <p class="small muted" style="margin:1.5mm 0 0;text-align:center;font-size:7.6pt;">소스·Git 이력·회귀 테스트 기준. 실제 현장명·IP·장비 식별자·운영 데이터는 공개본에서 제외했습니다.</p>
   </div>
 
-  <div class="run-foot"><span>SEO SANGHO · SAFE PUBLIC EDITION</span><span class="pageno"></span></div>
+
+    </div>
+  </div>
+<div class="run-foot"><span>SEO SANGHO · SAFE PUBLIC EDITION</span><span class="pageno"></span></div>
 </section>
 
 <!-- ============ ESP32 LIVING LAB ============ -->
 <section class="page grid-bg brackets">
   <div class="run-head"><span>FILE 03.D · LIVING LAB PROTOTYPE</span><span>ESP32-S3 WATER-LEVEL ALERT</span></div>
+  <div class="page-body">
+    <div class="page-flow">
   <div class="sec-title" style="margin-bottom:4mm;"><span class="sec-no">03.D</span><h2>빗물받이 수위 경보 시제품</h2><span class="en">ESP32-S3 · MY CONTRIBUTION</span></div>
 
   <div class="grid2" style="gap:7mm;align-items:start;">
@@ -1093,12 +1197,17 @@
     </div>
   </div>
 
-  <div class="run-foot"><span>SEO SANGHO · SENSOR DESIGN &amp; VERIFICATION</span><span class="pageno"></span></div>
+
+    </div>
+  </div>
+<div class="run-foot"><span>SEO SANGHO · SENSOR DESIGN &amp; VERIFICATION</span><span class="pageno"></span></div>
 </section>
 
 <!-- ============ PAGE 11 · AWARDS ============ -->
 <section class="page grid-bg brackets">
   <div class="run-head"><span>FILE 04 · AWARDS</span><span>서상호 PORTFOLIO</span></div>
+  <div class="page-body">
+    <div class="page-flow">
   <div class="sec-title"><span class="sec-no">04</span><h2>Awards</h2><span class="en">수상 · 선정 내역</span></div>
 
   <div class="card dark" style="margin-bottom:5mm;position:relative;overflow:hidden;">
@@ -1133,12 +1242,17 @@
   </div>
   <p class="small muted" style="margin-top:3mm;">※ <b>전국 코딩대회 2년 연속(은상·동상)</b> · <b>아이디어 경진대회 3년 연속 수상</b> · <b>게임아카데미·정부 공모 우수자 선정</b> · 장학생 2회 — 꾸준히 <b>문제를 정의하고 풀어내는 기획 역량</b>을 증명. 상세 증빙은 부록 A 참조.</p>
 
-  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+
+    </div>
+  </div>
+<div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
 </section>
 
 <!-- ============ PAGE 10 · CERTIFICATES ============ -->
 <section class="page grid-bg brackets">
   <div class="run-head"><span>FILE 05 · TRAINING</span><span>서상호 PORTFOLIO</span></div>
+  <div class="page-body">
+    <div class="page-flow">
   <div class="sec-title"><span class="sec-no">05</span><h2>Certificates &amp; Training</h2><span class="en">교육 · 자격</span></div>
 
   <div class="grid2" style="gap:6mm;align-items:start;">
@@ -1188,12 +1302,17 @@
     <span class="mono small muted" style="letter-spacing:.1em;">총 15건+ 교육 수료 · GAME-ACADEMY / AI / DATA / SMART-FACTORY / DESIGN-THINKING</span>
   </div>
 
-  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+
+    </div>
+  </div>
+<div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
 </section>
 
 <!-- ============ PAGE 10 · ACTIVITIES & GLOBAL ============ -->
 <section class="page grid-bg brackets">
   <div class="run-head"><span>FILE 06 · ACTIVITIES</span><span>서상호 PORTFOLIO</span></div>
+  <div class="page-body">
+    <div class="page-flow">
   <div class="sec-title"><span class="sec-no">06</span><h2>Activities &amp; Global</h2><span class="en">대외활동 · 글로벌</span></div>
 
   <div class="card dark" style="margin-bottom:5mm;position:relative;overflow:hidden;">
@@ -1230,12 +1349,17 @@
     한 흐름으로 연결되고, 끊겼을 때 다시 확인할 수 있어야 실제 운용이 됩니다. 개인 성과로 확인되지 않은 팀 성능 수치는 포트폴리오에서 제외했습니다.</p>
   </div>
 
-  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+
+    </div>
+  </div>
+<div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
 </section>
 
 <!-- ============ WORK EXPERIENCE ============ -->
 <section class="page grid-bg brackets">
   <div class="run-head"><span>FILE 07 · WORK EXPERIENCE</span><span>서상호 PORTFOLIO</span></div>
+  <div class="page-body">
+    <div class="page-flow">
   <div class="sec-title"><span class="sec-no">07</span><h2>경력</h2><span class="en">WORK EXPERIENCE</span></div>
 
   <div class="card-kraft card" style="margin-bottom:5mm;">
@@ -1257,12 +1381,17 @@
   </table>
   <p class="small muted" style="margin-top:3mm;">그 외 단기 근무 일부(서비스·유통). &nbsp;→ <b>기술·연구·교육·서비스 전반의 현장 경험</b>이 사용자와 현장을 이해하는 기획의 바탕입니다.</p>
 
-  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+
+    </div>
+  </div>
+<div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
 </section>
 
 <!-- ============ SELF STUDY + CLOSING ============ -->
 <section class="page grid-bg brackets">
   <div class="run-head"><span>FILE 08 · SELF-STUDY</span><span>서상호 PORTFOLIO</span></div>
+  <div class="page-body">
+    <div class="page-flow">
   <div class="sec-title"><span class="sec-no">08</span><h2>Self-Directed Learning</h2><span class="en">자기주도 학습</span></div>
 
   <div class="grid2" style="gap:6mm;align-items:start;">
@@ -1306,12 +1435,17 @@
     </div>
   </div>
 
-  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+
+    </div>
+  </div>
+<div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
 </section>
 
 <!-- ============ PAGE 12 · APPENDIX A · AWARDS EVIDENCE ============ -->
 <section class="page grid-bg brackets">
   <div class="run-head"><span>APPENDIX A · EVIDENCE</span><span>서상호 PORTFOLIO</span></div>
+  <div class="page-body">
+    <div class="page-flow awards-evidence">
   <div class="sec-title"><span class="sec-no">A</span><h2>수상 증빙</h2><span class="en">AWARDS · EVIDENCE</span></div>
   <p class="small muted" style="margin-bottom:3mm;">심사용 출력물을 위해 주요 수상 상장·증서 원본을 첨부합니다. <span class="mono">※ 2025 전국 창의코딩 동상은 수상자 명단(개인정보 포함) 형태라 본문 표기로 갈음합니다.</span></p>
 
@@ -1374,12 +1508,17 @@
     <figcaption class="small muted" style="margin-top:1.5mm;font-size:7.5pt;">선정 통보 메일 — 메디치이앤에스 운영 · 개인정보(이름·이메일) 제외 발췌</figcaption>
   </figure>
 
-  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+
+    </div>
+  </div>
+<div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
 </section>
 
 <!-- ============ PAGE 13 · APPENDIX B · CERTIFICATES (1) ============ -->
 <section class="page grid-bg brackets">
   <div class="run-head"><span>APPENDIX B · EVIDENCE</span><span>서상호 PORTFOLIO</span></div>
+  <div class="page-body">
+    <div class="page-flow">
   <div class="sec-title"><span class="sec-no">B</span><h2>교육·자격 증빙 <span style="font-size:11pt;color:var(--muted);">(1/2)</span></h2><span class="en">CERTIFICATES</span></div>
 
   <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4mm;">
@@ -1421,12 +1560,17 @@
     </figure>
   </div>
 
-  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+
+    </div>
+  </div>
+<div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
 </section>
 
 <!-- ============ PAGE 14 · APPENDIX B · CERTIFICATES (2) ============ -->
 <section class="page grid-bg brackets">
   <div class="run-head"><span>APPENDIX B · EVIDENCE</span><span>서상호 PORTFOLIO</span></div>
+  <div class="page-body">
+    <div class="page-flow">
   <div class="sec-title"><span class="sec-no">B</span><h2>교육·자격 증빙 <span style="font-size:11pt;color:var(--muted);">(2/2)</span></h2><span class="en">CERTIFICATES</span></div>
 
   <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4mm;">
@@ -1463,8 +1607,116 @@
     <span class="mono small muted" style="letter-spacing:.12em;">— END OF FILE · 괴이탐사국 INSPECTORATE —</span>
   </div>
 
-  <div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
+
+    </div>
+  </div>
+<div class="run-foot"><span>SEO SANGHO</span><span class="pageno"></span></div>
 </section>
 
+<script>
+(() => {
+  const debugMode = new URLSearchParams(window.location.search).has('layout-check');
+  document.documentElement.classList.toggle('layout-check', debugMode);
+
+  function fitPortfolioPages() {
+    const scales = [];
+    document.querySelectorAll('.page').forEach((page, index) => {
+      const body = page.querySelector('.page-body');
+      const flow = page.querySelector('.page-flow');
+      if (!body || !flow) return;
+
+      flow.style.zoom = '1';
+      flow.style.width = '100%';
+      const availableHeight = body.clientHeight;
+      const naturalHeight = flow.getBoundingClientRect().height;
+      let scale = Math.min(1, availableHeight / Math.max(naturalHeight, 1));
+
+      if (scale < 1) {
+        scale *= 0.995;
+        for (let attempt = 0; attempt < 4; attempt += 1) {
+          flow.style.width = '100%';
+          flow.style.zoom = String(scale);
+          const visualHeight = flow.getBoundingClientRect().height;
+          if (visualHeight <= availableHeight - 1) break;
+          scale *= (availableHeight - 1) / visualHeight;
+        }
+      }
+
+      flow.style.width = '100%';
+      flow.style.zoom = String(scale);
+      page.dataset.pageScale = scale.toFixed(3);
+      scales.push({ page: index + 1, scale });
+    });
+    return scales;
+  }
+
+  function auditPortfolioLayout() {
+    const issues = [];
+    document.querySelectorAll('.page').forEach((page, index) => {
+      const body = page.querySelector('.page-body');
+      const flow = page.querySelector('.page-flow');
+      const header = page.querySelector('.run-head');
+      const footer = page.querySelector('.run-foot');
+      if (!body || !flow) {
+        issues.push({ page: index + 1, reason: '본문 안전 영역 누락' });
+        page.dataset.layoutStatus = 'error';
+        return;
+      }
+
+      const flowRect = flow.getBoundingClientRect();
+      const bodyRect = body.getBoundingClientRect();
+      const contentTop = flowRect.top;
+      const contentBottom = flowRect.bottom;
+      const headerBottom = header ? header.getBoundingClientRect().bottom + 6 : -Infinity;
+      const footerTop = footer ? footer.getBoundingClientRect().top - 6 : Infinity;
+      const bodyOverflow = flowRect.height > bodyRect.height + 2;
+      const headerOverlap = contentTop < headerBottom;
+      const footerOverlap = contentBottom > footerTop;
+      const scale = Number(page.dataset.pageScale || 1);
+      const excessiveScale = scale < 0.74;
+
+      if (bodyOverflow || headerOverlap || footerOverlap || excessiveScale) {
+        const reasons = [];
+        if (bodyOverflow) reasons.push('본문 높이 초과');
+        if (headerOverlap) reasons.push('머리글 침범');
+        if (footerOverlap) reasons.push('바닥글 침범');
+        if (excessiveScale) reasons.push('본문 축소 과다');
+        issues.push({ page: index + 1, reason: reasons.join(', ') });
+        page.dataset.layoutStatus = 'error';
+      } else {
+        page.dataset.layoutStatus = 'ok';
+      }
+    });
+
+    const warning = document.getElementById('layout-warning');
+    if (warning) {
+      warning.hidden = !debugMode || issues.length === 0;
+      warning.textContent = issues.length
+        ? `레이아웃 경고: ${issues.map((issue) => `${issue.page}쪽 ${issue.reason}`).join(' / ')}`
+        : '';
+    }
+    if (issues.length) console.error('[portfolio-layout]', issues);
+    return issues;
+  }
+
+  function fitAndAudit() {
+    fitPortfolioPages();
+    return auditPortfolioLayout();
+  }
+
+  window.portfolioLayoutFit = fitPortfolioPages;
+  window.portfolioLayoutAudit = auditPortfolioLayout;
+  window.portfolioLayoutCheck = fitAndAudit;
+  const runCheck = () => requestAnimationFrame(fitAndAudit);
+  if (document.fonts?.ready) document.fonts.ready.then(runCheck);
+  else window.addEventListener('load', runCheck, { once: true });
+  window.addEventListener('beforeprint', fitAndAudit);
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(fitAndAudit, 120);
+  });
+})();
+</script>
 </body>
 </html>
