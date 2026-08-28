@@ -386,7 +386,7 @@
     <tr><th style="width:42mm;">프로젝트</th><th style="width:20mm;">도메인</th><th>핵심 시스템 기획</th><th style="width:44mm;">역할 · 성과</th></tr>
     <tr><td><b>괴이탐사국 INSPECTOR</b></td><td class="keycol">게임</td><td>간접 전투·덱·동료 성향·밸런스 시스템</td><td class="small">팀장·총괄 / 캡스톤 MVP</td></tr>
     <tr><td><b>피싱 필터</b></td><td class="keycol">보안 SaaS</td><td>3단 레이어 방어 파이프라인·수익모델</td><td class="small">기획·PM / 2026 동상</td></tr>
-    <tr><td><b>ThermoGuard</b></td><td class="keycol">산업·비전</td><td>열화상 ROI 분석·GUI·API/DB·알림 흐름</td><td class="small">GUI·카메라·연동 안정화 기여</td></tr>
+    <tr><td><b>ThermoGuard</b></td><td class="keycol">산업·비전</td><td>열화상 모니터링 GUI·카메라·API/DB 연동</td><td class="small">GUI·GigE·데이터·Linux 실행 구조</td></tr>
     <tr><td><b>빗물받이 수위 경보</b></td><td class="keycol">IoT·리빙랩</td><td>2단 플로트 감지·RGB/부저 단계 경보</td><td class="small">센서 설계·제작·동작 검증</td></tr>
     <tr><td><b>디지털 동반자</b></td><td class="keycol">AI 에이전트</td><td>음성 에이전트·복지/안전 연계 시스템</td><td class="small">기획 / 정부 우수참여자</td></tr>
     <tr><td><b>차세대 모듈형 충전 스테이션</b></td><td class="keycol">IoT · 제품</td><td>모듈 적층·자동 전력 배분·IoT 모니터링</td><td class="small">제품기획(팀) / 2024 입상</td></tr>
@@ -1061,65 +1061,50 @@
   <div class="run-head"><span>FILE 03.C · INDUSTRIAL MONITORING</span><span>THERMOGUARD</span></div>
   <div class="page-body">
     <div class="page-flow">
-  <div class="sec-title" style="margin-bottom:4mm;"><span class="sec-no">03.C</span><h2>ThermoGuard</h2><span class="en">THERMAL MONITORING · MY CONTRIBUTION</span></div>
+  <div class="sec-title" style="margin-bottom:4mm;"><span class="sec-no">03.C</span><h2>ThermoGuard</h2><span class="en">ROLE · WORK LOG</span></div>
 
-  <div class="grid2" style="gap:6mm;align-items:start;">
-    <div>
-      <span class="tag">2026 · 팀 프로젝트 · 산업 모니터링</span>
-      <h3 style="font-size:15pt;margin-top:3mm;">열화상 카메라 기반 로봇 상태 모니터링 시제품</h3>
-      <p class="small" style="margin-top:2mm;">FLIR A50의 열화상·가시광 이미지를 수집해 ROI별 온도와 핫스팟을 분석하고,
-      상태를 Dashboard에 표시한 뒤 FastAPI·MariaDB와 알림 이력으로 연결하는 프로젝트입니다.</p>
-      <div style="margin-top:3mm;">
-        <span class="chip chip-out">Python / Tk</span><span class="chip chip-out">FLIR A50</span>
-        <span class="chip chip-out">FastAPI</span><span class="chip chip-out">MariaDB</span>
-      </div>
-    </div>
-
-    <div class="card dark" style="position:relative;overflow:hidden;min-height:35mm;padding:4mm;">
-      <div class="scan"></div>
-      <div class="label" style="color:#8c8475;margin-bottom:3mm;">PUBLIC MOCKUP · SYNTHETIC DATA</div>
-      <div style="display:grid;grid-template-columns:1.2fr .8fr;gap:3mm;align-items:stretch;">
-        <div style="border:1px solid #474b4f;padding:3mm;border-radius:3px;">
-          <div class="mono" style="color:#fff;font-size:8pt;">ROI-A · 42.6°C</div>
-          <div style="height:13mm;margin-top:2mm;background:linear-gradient(135deg,#1f2940,#5b3f66,#e66c3a,#f3d55b);border-radius:2px;position:relative;">
-            <div style="position:absolute;left:28%;top:22%;width:42%;height:55%;border:1.5px solid var(--green-bright);"></div>
-          </div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:2mm;">
-          <div style="flex:1;border:1px solid #3a3d40;padding:2mm;border-radius:3px;"><span class="mono" style="color:#8c8475;font-size:7pt;">CAMERA</span><br><b style="color:var(--green-bright);">CONNECTED</b></div>
-          <div style="flex:1;border:1px solid #3a3d40;padding:2mm;border-radius:3px;"><span class="mono" style="color:#8c8475;font-size:7pt;">STATUS</span><br><b style="color:#fff;">WARNING</b></div>
-        </div>
-      </div>
-    </div>
+  <div class="card-kraft card" style="padding:4mm 5mm;">
+    <span class="tag">2026 · 팀 프로젝트</span>
+    <p class="small" style="margin:3mm 0 0;"><b>간단 소개</b> — 열화상 카메라로 산업용 로봇의 온도 상태를 확인하고,
+    GUI와 FastAPI·MariaDB를 통해 측정·이벤트 기록을 관리하는 모니터링 시제품입니다.</p>
   </div>
 
-  <div class="sec-title" style="margin-top:4mm;margin-bottom:3mm;"><span class="sec-no">MY</span><h2 style="font-size:15pt;">제가 진행한 부분</h2><span class="en">ROLE · PROBLEM SOLVING</span></div>
+  <div class="sec-title" style="margin-top:6mm;margin-bottom:3mm;"><span class="sec-no">MY</span><h2 style="font-size:15pt;">담당한 영역</h2><span class="en">WHAT I OWNED</span></div>
   <div class="grid2" style="gap:4mm;align-items:stretch;">
-    <div class="card" style="border-left:3px solid var(--green);padding:3.5mm;">
-      <h3>01 · 통합 GUI</h3>
-      <p class="small" style="margin:0;">캘리브레이션·ROI 설정·모니터링·이벤트 확인을 한 화면 흐름으로 묶고,
-      Dashboard의 중복 코드를 정리해 기존 모듈을 재사용하도록 개선했습니다.</p>
+    <div class="card" style="border-left:3px solid var(--green);padding:4mm;">
+      <h3>통합 GUI</h3>
+      <p class="small" style="margin:0;">캘리브레이션·ROI 설정·모니터링·이벤트 확인 흐름을 하나의 Dashboard로 통합하고,
+      중복 코드를 정리해 기존 모듈을 재사용하도록 개선했습니다.</p>
     </div>
-    <div class="card" style="border-left:3px solid var(--green);padding:3.5mm;">
-      <h3>02 · GigE 카메라 연결</h3>
-      <p class="small" style="margin:0;">GigE 카메라 연결 경로를 구현·적용 시험하고, 연결 상태를 화면과 운영 로그에서
-      같은 기준으로 확인할 수 있도록 상태 메시지를 정리했습니다.</p>
+    <div class="card" style="border-left:3px solid var(--green);padding:4mm;">
+      <h3>GigE 카메라 연결</h3>
+      <p class="small" style="margin:0;">GigE 연결 경로를 구현·적용 시험하고, 카메라 연결 상태와 상태 메시지를
+      GUI와 운영 로그에서 같은 기준으로 확인하도록 정리했습니다.</p>
     </div>
-    <div class="card" style="border-left:3px solid var(--green);padding:3.5mm;">
-      <h3>03 · API·DB 연동 안정화</h3>
-      <p class="small" style="margin:0;">캡처 URL을 별도 함수로 분리하고 누락 API와 연동 테스트를 보강했습니다.
-      Normal 데이터 적재 정책과 중복 수집 경로를 추적해 운영 진입점을 Dashboard로 정리했습니다.</p>
+    <div class="card" style="border-left:3px solid var(--green);padding:4mm;">
+      <h3>API·DB·데이터 흐름</h3>
+      <p class="small" style="margin:0;">캡처 URL 함수화, 누락 API와 연동 테스트 보강, 중복 수집 경로 추적,
+      이미지 저장 파싱과 Normal 이미지 쌍 정리 작업을 진행했습니다.</p>
     </div>
-    <div class="card" style="border-left:3px solid var(--green);padding:3.5mm;">
-      <h3>04 · 데이터·운영 로그 정리</h3>
-      <p class="small" style="margin:0;">흩어진 로그 구분값을 그룹화하고, 이미지 저장 파싱과 Normal 이미지 쌍 정리 흐름을
-      개선해 장애 원인을 추적하기 쉬운 구조로 다듬었습니다.</p>
+    <div class="card" style="border-left:3px solid var(--green);padding:4mm;">
+      <h3>Linux 실행·패키징 구조</h3>
+      <p class="small" style="margin:0;">Ubuntu amd64·arm64용 실행 번들, 빌드 스크립트, smoke test와 CI 패키징 구조를
+      <span class="mono">setup_version</span> 브랜치에 정리했습니다.</p>
     </div>
   </div>
 
-  <div class="card-kraft card" style="margin-top:3mm;padding:3mm 4mm;">
-    <p class="small mono" style="margin:0;text-align:center;"><b>FLIR 수집</b> → <b>ROI 분석</b> → <b>상태 판정</b> → <b>API·DB·Telegram</b></p>
-    <p class="small muted" style="margin:1.5mm 0 0;text-align:center;font-size:7.6pt;">소스·Git 이력·회귀 테스트 기준. 실제 현장명·IP·장비 식별자·운영 데이터는 공개본에서 제외했습니다.</p>
+  <div class="sec-title" style="margin-top:6mm;margin-bottom:3mm;"><span class="sec-no">LOG</span><h2 style="font-size:15pt;">진행한 작업</h2><span class="en">VERIFIED BY GIT HISTORY</span></div>
+  <div class="timeline">
+    <div class="row"><span class="when">2026.07</span><span><b>통합 GUI 구현</b> — 설정·캘리브레이션·모니터링 기능을 한 화면 흐름으로 구성</span></div>
+    <div class="row"><span class="when">2026.08</span><span><b>GigE 적용</b> — 카메라 연결, 상태 표시, 메시지·운영 로그 기준 통일</span></div>
+    <div class="row"><span class="when">2026.08</span><span><b>연동·데이터 정리</b> — API 테스트, 중복 기록 경로 확인, 저장 파싱·Normal 이미지 정리</span></div>
+    <div class="row"><span class="when">2026.08</span><span><b>Linux 실행 구조</b> — 두 CPU 아키텍처 패키징과 GUI smoke test 절차 구성</span></div>
+  </div>
+
+  <div class="card dark" style="margin-top:5mm;padding:3mm 4mm;position:relative;overflow:hidden;">
+    <div class="scan"></div>
+    <p class="small" style="margin:0;color:#e8e2d4;">실제 회사명·현장명·IP·장비 식별자·운영 데이터는 수록하지 않았습니다.
+    Linux 패키징은 브랜치 구현 기준이며, 실장비·장시간 운영 검증 완료로 표현하지 않습니다.</p>
   </div>
 
 
