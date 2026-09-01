@@ -18,54 +18,51 @@
   <title>서상호 | 게임·시스템 기획 포트폴리오</title>
 </head>
 <body>
-  <a class="skip-link" href="#portfolio-content">본문으로 건너뛰기</a>
+  <a class="skip-link" href="#profile" data-page-link>본문으로 건너뛰기</a>
 
-  <header class="mobile-bar" aria-label="모바일 포트폴리오 도구">
-    <div>
-      <span class="mobile-bar__label">SEO SANGHO · FIELD NOTES</span>
-      <strong id="mobile-current-title">프로필</strong>
-    </div>
-    <button class="menu-toggle" id="menu-toggle" type="button" aria-controls="portfolio-index" aria-expanded="false">
-      <span aria-hidden="true">☰</span>
-      목차
+  <section class="book-intro" id="book-intro" aria-labelledby="book-intro-title">
+    <button class="closed-notebook" id="open-notebook" type="button" aria-label="서상호의 포트폴리오 노트 펼치기" aria-controls="portfolio-shell" aria-expanded="false">
+      <span class="closed-notebook__book">
+        <span class="closed-notebook__paper" aria-hidden="true"></span>
+        <span class="closed-notebook__cover">
+          <span class="closed-notebook__meta">PORTFOLIO NOTEBOOK</span>
+          <strong id="book-intro-title">서상호</strong>
+          <span class="closed-notebook__role">게임 · 시스템 기획</span>
+          <span class="closed-notebook__action">포트폴리오 열기 <b aria-hidden="true">→</b></span>
+        </span>
+      </span>
     </button>
-  </header>
+  </section>
 
-  <button class="menu-backdrop" id="menu-backdrop" type="button" aria-label="목차 닫기" tabindex="-1"></button>
-
-  <div class="portfolio-shell">
-    <aside class="index-page" id="portfolio-index" aria-label="포트폴리오 목차">
-      <div class="index-page__header">
-        <p class="file-label">FIELD NOTE · 2026</p>
-        <p class="index-page__name">서상호<span aria-hidden="true">.</span></p>
-        <p class="index-page__role">게임 · 시스템 기획</p>
-        <p class="index-page__intro">게임에서 출발해 여러 도메인의 문제를 규칙과 데이터로 설계합니다.</p>
+  <div class="portfolio-shell" id="portfolio-shell">
+    <header class="open-toolbar" aria-label="열린 포트폴리오 도구">
+      <button class="close-notebook" id="close-notebook" type="button">
+        <span aria-hidden="true">←</span>
+        노트 닫기
+      </button>
+      <div>
+        <span>현재 기록</span>
+        <strong id="current-page-title">프로필</strong>
       </div>
+    </header>
 
-      <nav class="index-nav" aria-label="포트폴리오 목차">
-        <p class="index-nav__title">INDEX / 목차</p>
+    <div class="open-notebook">
+      <nav class="postit-nav" id="portfolio-index" aria-label="포트폴리오 목차">
         <ol>
-          <li><a href="#profile" data-page-link><span>00</span><strong>프로필</strong><small>Profile</small></a></li>
-          <li><a href="#capabilities" data-page-link><span>01</span><strong>역량과 기획 방식</strong><small>Skills &amp; Method</small></a></li>
-          <li><a href="#inspector" data-page-link><span>02</span><strong>괴이탐사국</strong><small>Flagship · Ongoing</small></a></li>
-          <li><a href="#phishing-filter" data-page-link><span>03</span><strong>피싱 필터</strong><small>Security · Award</small></a></li>
-          <li><a href="#thermoguard" data-page-link><span>04</span><strong>ThermoGuard</strong><small>Industrial Monitoring</small></a></li>
-          <li><a href="#esp32-living-lab" data-page-link><span>05</span><strong>ESP32 리빙랩</strong><small>IoT · Prototype</small></a></li>
-          <li><a href="#selected-work" data-page-link><span>06</span><strong>선별 프로젝트</strong><small>Other Work</small></a></li>
-          <li><a href="#activities" data-page-link><span>07</span><strong>활동과 현장 경험</strong><small>Journey</small></a></li>
-          <li><a href="#credentials" data-page-link><span>08</span><strong>수상과 학습</strong><small>Recognition</small></a></li>
-          <li><a href="#contact" data-page-link><span>09</span><strong>증빙과 연락</strong><small>Archive &amp; Contact</small></a></li>
+          <li><a href="#profile" data-page-link aria-label="프로필"><span>00</span><strong>프로필</strong><small class="postit-short" aria-hidden="true">소개</small></a></li>
+          <li><a href="#capabilities" data-page-link aria-label="역량과 기획 방식"><span>01</span><strong>역량</strong><small class="postit-short" aria-hidden="true">역량</small></a></li>
+          <li><a href="#inspector" data-page-link aria-label="괴이탐사국 INSPECTOR"><span>02</span><strong>괴이탐사국</strong><small class="postit-short" aria-hidden="true">괴이</small></a></li>
+          <li><a href="#phishing-filter" data-page-link aria-label="피싱 필터"><span>03</span><strong>피싱 필터</strong><small class="postit-short" aria-hidden="true">피싱</small></a></li>
+          <li><a href="#thermoguard" data-page-link aria-label="ThermoGuard"><span>04</span><strong>Thermo</strong><small class="postit-short" aria-hidden="true">열화상</small></a></li>
+          <li><a href="#esp32-living-lab" data-page-link aria-label="ESP32 리빙랩"><span>05</span><strong>ESP32</strong><small class="postit-short" aria-hidden="true">센서</small></a></li>
+          <li><a href="#selected-work" data-page-link aria-label="선별 프로젝트"><span>06</span><strong>프로젝트</strong><small class="postit-short" aria-hidden="true">작업</small></a></li>
+          <li><a href="#activities" data-page-link aria-label="활동과 현장 경험"><span>07</span><strong>활동</strong><small class="postit-short" aria-hidden="true">활동</small></a></li>
+          <li><a href="#credentials" data-page-link aria-label="수상과 학습"><span>08</span><strong>수상</strong><small class="postit-short" aria-hidden="true">수상</small></a></li>
+          <li><a href="#contact" data-page-link aria-label="증빙과 연락"><span>09</span><strong>연락</strong><small class="postit-short" aria-hidden="true">연락</small></a></li>
         </ol>
       </nav>
 
-      <div class="index-page__footer">
-        <a href="https://github.com/se0sangh0" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span><span class="sr-only"> 새 창</span></a>
-        <a href="mailto:hirasawa224@gmail.com">Email</a>
-        <p>OPEN THE DOOR.<br>MANAGE THE ANOMALY.</p>
-      </div>
-    </aside>
-
-    <main class="page-stage" id="portfolio-content" tabindex="-1">
+      <main class="page-stage" id="portfolio-content" tabindex="-1">
       <div class="page-stage__topline" aria-hidden="true">
         <span>INSPECTORATE · PORTFOLIO FILE</span>
         <span id="page-counter">00 / 09</span>
@@ -74,7 +71,7 @@
 
       <article class="notebook-page" id="profile" aria-labelledby="profile-title" data-page-title="프로필">
         <header class="record-heading record-heading--profile">
-          <p class="record-kicker">FILE 00 · PROFILE</p>
+          <p class="record-kicker">PROFILE</p>
           <h1 id="profile-title" tabindex="-1">문제를 발견하고,<br><em>작동하는 규칙</em>으로 만듭니다.</h1>
           <p class="record-lead">게임에서 출발해 보안·산업 모니터링·IoT·웹까지. 분야는 달라도 <strong>문제 정의 → 시스템 설계 → 검증</strong>이라는 한 가지 방식으로 기획합니다.</p>
           <div class="profile-signature">
@@ -113,7 +110,7 @@
 
       <article class="notebook-page" id="capabilities" aria-labelledby="capabilities-title" data-page-title="역량과 기획 방식">
         <header class="record-heading">
-          <p class="record-kicker">FILE 01 · CAPABILITIES</p>
+          <p class="record-kicker">CAPABILITIES</p>
           <h1 id="capabilities-title" tabindex="-1">기술 목록보다,<br><em>프로젝트에서 증명한 역량</em></h1>
           <p class="record-lead">필요한 기술을 목적에 맞게 익히고, 기획 문서와 실제 결과 사이의 차이를 줄이는 데 사용했습니다.</p>
         </header>
@@ -167,7 +164,7 @@
           <img src="assets/game_title.jpg" alt="괴이탐사국 INSPECTOR 타이틀 화면" width="1300" height="716">
           <div class="project-hero__shade"></div>
           <div class="project-hero__copy">
-            <p class="record-kicker">FILE 02 · FLAGSHIP PROJECT</p>
+            <p class="record-kicker">FLAGSHIP PROJECT</p>
             <span class="status-mark">ONGOING</span>
             <h1 id="inspector-title" tabindex="-1">괴이탐사국<br><em>INSPECTOR</em></h1>
             <p>덱빌딩 × 오토배틀러 × 로그라이크</p>
@@ -183,7 +180,7 @@
           <dl class="fact-sheet">
             <div><dt>팀</dt><dd>팀578 · 3인</dd></div>
             <div><dt>역할</dt><dd>팀장 · 기획 총괄</dd></div>
-            <div><dt>상태</dt><dd>2026.03–현재 · 진행 중</dd></div>
+            <div><dt>상태</dt><dd>2026.03-현재 · 진행 중</dd></div>
             <div><dt>환경</dt><dd>Unity · C# · Git/GitHub</dd></div>
           </dl>
         </section>
@@ -293,7 +290,7 @@
 
       <article class="notebook-page notebook-page--blue-accent" id="phishing-filter" aria-labelledby="phishing-title" data-page-title="피싱 필터">
         <header class="record-heading">
-          <p class="record-kicker">FILE 03 · SECURITY PRODUCT</p>
+          <p class="record-kicker">SECURITY PRODUCT</p>
           <span class="status-mark status-mark--blue">2026 동상</span>
           <h1 id="phishing-title" tabindex="-1">피싱 필터<br><em>Phishing Filter</em></h1>
           <p class="record-lead">소셜 DM으로 전달되는 피싱 링크를 DNS, 리다이렉트, DOM 분석의 세 단계로 확인해 위험도를 알리는 보안 서비스 아이디어입니다.</p>
@@ -387,7 +384,7 @@
 
       <article class="notebook-page" id="thermoguard" aria-labelledby="thermoguard-title" data-page-title="ThermoGuard">
         <header class="record-heading">
-          <p class="record-kicker">FILE 04 · INDUSTRIAL MONITORING</p>
+          <p class="record-kicker">INDUSTRIAL MONITORING</p>
           <h1 id="thermoguard-title" tabindex="-1">ThermoGuard</h1>
           <p class="record-lead">열화상 카메라로 산업용 로봇의 온도 상태를 확인하고 측정·이벤트 기록을 관리하는 모니터링 시스템입니다.</p>
         </header>
@@ -462,7 +459,7 @@
 
       <article class="notebook-page" id="esp32-living-lab" aria-labelledby="esp32-title" data-page-title="ESP32 리빙랩">
         <header class="record-heading">
-          <p class="record-kicker">FILE 05 · LIVING LAB PROTOTYPE</p>
+          <p class="record-kicker">LIVING LAB PROTOTYPE</p>
           <h1 id="esp32-title" tabindex="-1">빗물받이 수위 경보<br><em>ESP32-S3 Prototype</em></h1>
           <p class="record-lead">골목 빗물받이의 배수 지연 문제를 해결하기 위해 두 개의 플로트 센서로 상태를 감지하고 RGB LED와 부저로 알리도록 제작한 ESP32-S3 센서 프로토타입입니다.</p>
         </header>
@@ -514,7 +511,7 @@
 
       <article class="notebook-page" id="selected-work" aria-labelledby="selected-title" data-page-title="선별 프로젝트">
         <header class="record-heading">
-          <p class="record-kicker">FILE 06 · SELECTED WORK</p>
+          <p class="record-kicker">SELECTED WORK</p>
           <h1 id="selected-title" tabindex="-1">도메인은 달라도,<br><em>기획의 중심은 같습니다.</em></h1>
           <p class="record-lead">프로젝트 전체 설명보다 제가 맡은 문제 정의·구조 설계·구현 범위를 중심으로 추렸습니다.</p>
         </header>
@@ -578,7 +575,7 @@
 
       <article class="notebook-page" id="activities" aria-labelledby="activities-title" data-page-title="활동과 현장 경험">
         <header class="record-heading">
-          <p class="record-kicker">FILE 07 · JOURNEY</p>
+          <p class="record-kicker">EXPERIENCE</p>
           <h1 id="activities-title" tabindex="-1">기술과 사람 사이를<br><em>연결해 본 경험</em></h1>
           <p class="record-lead">로봇 통신, 글로벌 연수, 기술 지원과 사용자 응대를 거치며 시스템은 실제 사용 흐름과 복구 과정까지 포함해야 한다고 배웠습니다.</p>
         </header>
@@ -637,7 +634,7 @@
 
       <article class="notebook-page" id="credentials" aria-labelledby="credentials-title" data-page-title="수상과 학습">
         <header class="record-heading">
-          <p class="record-kicker">FILE 08 · RECOGNITION</p>
+          <p class="record-kicker">RECOGNITION</p>
           <h1 id="credentials-title" tabindex="-1">스스로 익히고,<br><em>결과로 남겼습니다.</em></h1>
           <p class="record-lead">수상 개수보다 어떤 역량을 반복해서 보여 주었는지에 초점을 맞췄습니다.</p>
         </header>
@@ -677,7 +674,7 @@
 
       <article class="notebook-page" id="contact" aria-labelledby="contact-title" data-page-title="증빙과 연락">
         <header class="record-heading">
-          <p class="record-kicker">FILE 09 · ARCHIVE &amp; CONTACT</p>
+          <p class="record-kicker">ARCHIVE &amp; CONTACT</p>
           <h1 id="contact-title" tabindex="-1">기록을 확인하고,<br><em>다음 이야기를 시작해 주세요.</em></h1>
           <p class="record-lead">아래 이미지는 공개용 사본입니다. 연락처·학번·일련번호 등 공개에 필요하지 않은 정보는 제외하거나 가렸습니다.</p>
         </header>
@@ -722,12 +719,13 @@
         <button type="button" id="previous-page"><span aria-hidden="true">←</span><span><small>이전 기록</small><strong id="previous-title">없음</strong></span></button>
         <button type="button" id="next-page"><span><small>다음 기록</small><strong id="next-title">역량과 기획 방식</strong></span><span aria-hidden="true">→</span></button>
       </nav>
-    </main>
+      </main>
+    </div>
   </div>
 
   <p class="sr-only" id="page-announcer" aria-live="polite" aria-atomic="true"></p>
   <noscript>
-    <div class="noscript-note">자바스크립트가 꺼져 있어 모든 기록을 한 문서로 표시합니다. 목차 링크로 각 기록으로 이동할 수 있습니다.</div>
+    <div class="noscript-note">자바스크립트가 꺼져 있어 모든 기록을 한 문서로 표시합니다. 측면 목차 링크로 각 기록으로 이동할 수 있습니다.</div>
   </noscript>
 </body>
 </html>
