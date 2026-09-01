@@ -2616,9 +2616,9 @@ em {
     background:
       linear-gradient(
         90deg,
-        transparent 0 40px,
-        var(--margin-rule) 40px 42px,
-        transparent 42px
+        transparent 0 34px,
+        var(--margin-rule) 34px 36px,
+        transparent 36px
       ),
       repeating-linear-gradient(
         to bottom,
@@ -2661,9 +2661,9 @@ em {
     background:
       linear-gradient(
         90deg,
-        transparent 0 40px,
-        var(--margin-rule) 40px 42px,
-        transparent 42px
+        transparent 0 34px,
+        var(--margin-rule) 34px 36px,
+        transparent 36px
       ),
       repeating-linear-gradient(
         to bottom,
@@ -2684,11 +2684,11 @@ em {
 
   .paged-ready body.book-open .book-leaf--left::after {
     right: auto;
-    left: 52px;
+    left: 46px;
   }
 
   .paged-ready body.book-open .book-leaf--right::after {
-    right: 52px;
+    right: 46px;
   }
 
   .paged-ready body.book-open .page-turn-sheet {
@@ -2701,9 +2701,9 @@ em {
     background:
       linear-gradient(
         90deg,
-        transparent 0 40px,
-        var(--margin-rule) 40px 42px,
-        transparent 42px
+        transparent 0 34px,
+        var(--margin-rule) 34px 36px,
+        transparent 36px
       ),
       repeating-linear-gradient(
         to bottom,
@@ -4046,6 +4046,21 @@ html:not(.js) .open-toolbar {
   display: flow-root;
 }
 
+@media (min-width: 768px) and (min-height: 761px) {
+  .paged-ready body.book-open .book-page-unit {
+    margin-bottom: clamp(16px, 2vh, 20px) !important;
+  }
+
+  .paged-ready body.book-open .book-fragment-heading {
+    margin-bottom: clamp(14px, 2vh, 18px);
+    padding-bottom: 10px;
+  }
+
+  .paged-ready body.book-open .section-heading {
+    margin-bottom: clamp(16px, 2.2vh, 22px);
+  }
+}
+
 @media (max-width: 767px) {
   .paged-ready body.book-open .page-stage__topline {
     justify-content: center;
@@ -4060,13 +4075,13 @@ html:not(.js) .open-toolbar {
 
 @media (min-width: 1180px) and (min-height: 650px) {
   .paged-ready body.book-open .book-leaf {
-    padding: clamp(24px, 3.4vh, 34px) 52px 34px;
+    padding: clamp(22px, 2.9vh, 28px) 46px 24px;
     background:
       linear-gradient(
         90deg,
-        transparent 0 40px,
-        var(--margin-rule) 40px 42px,
-        transparent 42px
+        transparent 0 34px,
+        var(--margin-rule) 34px 36px,
+        transparent 36px
       ),
       repeating-linear-gradient(
         to bottom,
@@ -4110,6 +4125,10 @@ html:not(.js) .open-toolbar {
     display: block;
   }
 
+  .paged-ready body.book-open .book-page-unit.profile-grid {
+    margin-bottom: 14px !important;
+  }
+
   .paged-ready body.book-open .book-fragment.method-strip,
   .paged-ready body.book-open ol.book-fragment-grid,
   .paged-ready body.book-open .book-fragment-grid.system-flow {
@@ -4121,7 +4140,7 @@ html:not(.js) .open-toolbar {
   }
 
   .paged-ready body.book-open .book-fragment-grid.atlas-grid a {
-    min-height: 112px;
+    min-height: 100px;
   }
 
   .paged-ready body.book-open .book-fragment--media img,
@@ -4138,7 +4157,7 @@ html:not(.js) .open-toolbar {
   }
 
   .paged-ready body.book-open .contact-links {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .paged-ready body.book-open .experience-row {

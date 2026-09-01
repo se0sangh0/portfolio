@@ -550,7 +550,7 @@
       const paddingBottom = Number.parseFloat(leafStyle.paddingBottom) || 0;
       const marginBottom = Number.parseFloat(lastStyle.marginBottom) || 0;
       const contentBottom = lastUnit.getBoundingClientRect().bottom + marginBottom;
-      const safeBottom = leafRect.bottom - paddingBottom - 10;
+      const safeBottom = leafRect.bottom - paddingBottom - 8;
 
       return (
         leaf.scrollHeight > leaf.clientHeight + 1 ||
