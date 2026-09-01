@@ -17,9 +17,22 @@
     return header;
   }
 
+  function readableText(node) {
+    if (!node) return "";
+    return Array.from(node.childNodes)
+      .map((child) => {
+        if (child.nodeType === Node.TEXT_NODE) return child.textContent || "";
+        if (child.nodeName === "BR") return " ";
+        return readableText(child);
+      })
+      .join("")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
   function unitTitle(node, fallback) {
     const heading = node.querySelector("h1, h2, h3, summary, strong");
-    return heading?.textContent?.trim() || fallback;
+    return readableText(heading) || fallback;
   }
 
   function markUnit(node, title) {
@@ -440,7 +453,7 @@
     const leaf = document.createElement("section");
     leaf.className = "book-leaf";
     leaf.setAttribute("role", "group");
-    leaf.setAttribute("aria-roledescription", "책장");
+    leaf.setAttribute("aria-roledescription", "책 쪽");
     article.append(leaf);
     return leaf;
   }
@@ -448,6 +461,22 @@
   window.createPortfolioPaginator = function createPortfolioPaginator(articles) {
     const states = new Map();
     let activeArticle = null;
+    const spreadMedia = window.matchMedia(
+      "(min-width: 1180px) and (min-height: 650px)"
+    );
+
+    function usesSpread() {
+      return spreadMedia.matches;
+    }
+
+    function onModeChange(listener) {
+      spreadMedia.addEventListener("change", listener);
+      return () => spreadMedia.removeEventListener("change", listener);
+    }
+
+    function spreadStart(index) {
+      return usesSpread() ? Math.floor(index / 2) * 2 : index;
+    }
 
     articles.forEach((article) => {
       const nodes = Array.from(article.children);
@@ -455,11 +484,15 @@
       nodes.forEach((node) =>
         units.push(...atomizeNode(node, article.dataset.pageTitle || article.id))
       );
+      units.forEach((unit, index) => {
+        unit.dataset.bookUnitIndex = String(index);
+      });
       article.replaceChildren();
       states.set(article, {
         units,
         leaves: [],
         index: 0,
+        cursor: 0,
         prepared: false
       });
     });
@@ -467,9 +500,33 @@
     function applyLeafState(article, requestedIndex) {
       const state = states.get(article);
       if (!state) return null;
-      state.index = Math.max(0, Math.min(requestedIndex, state.leaves.length - 1));
+      if (!state.leaves.length) {
+        state.index = 0;
+        state.cursor = 0;
+        return getState(article);
+      }
+
+      const safeIndex = Math.max(
+        0,
+        Math.min(requestedIndex, state.leaves.length - 1)
+      );
+      const visibleStart = spreadStart(safeIndex);
+      const visibleEnd = Math.min(
+        visibleStart + (usesSpread() ? 1 : 0),
+        state.leaves.length - 1
+      );
+      state.index = visibleStart;
+      state.cursor = safeIndex;
+      article.classList.toggle("is-spread-layout", usesSpread());
+      article.classList.toggle(
+        "is-odd-spread-end",
+        usesSpread() && visibleStart === visibleEnd
+      );
+      article.dataset.visibleStart = String(visibleStart);
+      article.dataset.visibleEnd = String(visibleEnd);
+
       state.leaves.forEach((leaf, index) => {
-        const active = index === state.index;
+        const active = index >= visibleStart && index <= visibleEnd;
         leaf.hidden = !active;
         leaf.inert = !active;
         leaf.setAttribute("aria-hidden", String(!active));
@@ -521,11 +578,22 @@
         const title = leaf.querySelector(".book-page-unit")?.dataset.bookUnitTitle ||
           article.dataset.pageTitle ||
           article.id;
+        const side = index % 2 === 0 ? "왼쪽" : "오른쪽";
+        const sideLabel = usesSpread() ? side + ", " : "";
         leaf.dataset.leafTitle = title;
+        leaf.dataset.leafIndex = String(index);
+        leaf.dataset.pageNumber = String(index + 1).padStart(
+          String(total).length,
+          "0"
+        );
+        leaf.classList.toggle("book-leaf--left", index % 2 === 0);
+        leaf.classList.toggle("book-leaf--right", index % 2 === 1);
         leaf.setAttribute(
           "aria-label",
-          title + ", " + (index + 1) + "쪽 / " + total + "쪽"
+          title + ", " + sideLabel + (index + 1) + "쪽 / " + total + "쪽"
         );
+        leaf.setAttribute("aria-posinset", String(index + 1));
+        leaf.setAttribute("aria-setsize", String(total));
       });
     }
 
@@ -609,19 +677,44 @@
 
     function getState(article = activeArticle) {
       const state = states.get(article);
-      if (!state) return { index: 0, count: 1, title: "" };
-      const leaf = state.leaves[state.index];
+      if (!state) {
+        return {
+          index: 0,
+          count: 1,
+          title: "",
+          visibleStart: 0,
+          visibleEnd: 0,
+          step: 1,
+          spread: false
+        };
+      }
+      const count = Math.max(1, state.leaves.length);
+      const visibleStart = spreadStart(
+        Math.max(0, Math.min(state.cursor, count - 1))
+      );
+      const visibleEnd = Math.min(
+        visibleStart + (usesSpread() ? 1 : 0),
+        count - 1
+      );
+      const cursor = Math.max(0, Math.min(state.cursor, count - 1));
+      const leaf = state.leaves[cursor];
       const firstUnit = leaf?.querySelector(":scope > .book-page-unit");
       const anchor = firstUnit ? state.units.indexOf(firstUnit) : 0;
       return {
-        index: state.index,
-        count: Math.max(1, state.leaves.length),
+        index: cursor,
+        count,
         title:
           leaf?.dataset.leafTitle ||
           article.dataset.pageTitle ||
           article.id,
         anchor: Math.max(0, anchor),
-        scrollable: leaf?.classList.contains("book-leaf--scrollable") || false
+        visibleStart,
+        visibleEnd,
+        step: usesSpread() ? 2 : 1,
+        spread: usesSpread(),
+        scrollable: state.leaves
+          .slice(visibleStart, visibleEnd + 1)
+          .some((item) => item.classList.contains("book-leaf--scrollable"))
       };
     }
 
@@ -634,6 +727,16 @@
       return state.leaves[safeIndex]?.dataset.leafTitle ||
         article.dataset.pageTitle ||
         article.id;
+    }
+
+    function anchorAtLeaf(index, article = activeArticle) {
+      const state = states.get(article);
+      if (!state || !state.leaves.length) return 0;
+      const safeIndex = Math.max(0, Math.min(index, state.leaves.length - 1));
+      const unit = state.leaves[safeIndex]?.querySelector(
+        ":scope > .book-page-unit"
+      );
+      return Math.max(0, unit ? state.units.indexOf(unit) : 0);
     }
 
     function setLeaf(index) {
@@ -656,11 +759,11 @@
       return Number.isInteger(anchorIndex) ? setAnchor(anchorIndex) : prepared;
     }
 
-    function repackActive() {
+    function repackActive(anchorIndex = null) {
       if (!activeArticle) return null;
       const current = getState(activeArticle);
       prepare(activeArticle, 0);
-      return setAnchor(current.anchor);
+      return setAnchor(Number.isInteger(anchorIndex) ? anchorIndex : current.anchor);
     }
 
     function preparePrint() {
@@ -684,6 +787,9 @@
       setAnchor,
       getState,
       titleAt,
+      anchorAtLeaf,
+      usesSpread,
+      onModeChange,
       repackActive,
       preparePrint,
       restoreAfterPrint,

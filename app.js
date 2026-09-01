@@ -18,6 +18,8 @@
   const edgeNextButton = document.getElementById("edge-next-page");
   const previousTitle = document.getElementById("previous-title");
   const nextTitle = document.getElementById("next-title");
+  const previousActionLabel = document.getElementById("previous-action-label");
+  const nextActionLabel = document.getElementById("next-action-label");
   const pageCounter = document.getElementById("page-counter");
   const currentPageTitle = document.getElementById("current-page-title");
   const announcer = document.getElementById("page-announcer");
@@ -73,6 +75,25 @@
     return pageTitles[index] || "";
   }
 
+  function visibleRangeLabel(state) {
+    if (state.visibleStart === state.visibleEnd) {
+      return String(state.visibleStart + 1);
+    }
+    return String(state.visibleStart + 1) + "-" + String(state.visibleEnd + 1);
+  }
+
+  function spokenRangeLabel(state) {
+    if (state.visibleStart === state.visibleEnd) {
+      return String(state.visibleStart + 1) + "쪽";
+    }
+    return (
+      String(state.visibleStart + 1) +
+      "쪽부터 " +
+      String(state.visibleEnd + 1) +
+      "쪽"
+    );
+  }
+
   function cleanUrl() {
     return window.location.pathname + window.location.search;
   }
@@ -87,7 +108,15 @@
     const pageId = pageIds[index];
     const leafState = paginator
       ? paginator.getState(pages[index])
-      : { index: 0, count: 1, title: titleFor(index) };
+      : {
+          index: 0,
+          count: 1,
+          title: titleFor(index),
+          visibleStart: 0,
+          visibleEnd: 0,
+          step: 1,
+          spread: false
+        };
     currentLeafIndex = leafState.index;
     currentAnchorIndex = leafState.anchor || 0;
 
@@ -102,20 +131,31 @@
       " / " +
       String(pages.length).padStart(2, "0") +
       " | " +
-      String(leafState.index + 1) +
+      visibleRangeLabel(leafState) +
       " / " +
       String(leafState.count);
     currentPageTitle.textContent = titleFor(index);
     document.title = isBookOpen ? titleFor(index) + " | 서상호 포트폴리오" : baseTitle;
 
-    const hasPrevious = leafState.index > 0;
-    const hasNext = leafState.index < leafState.count - 1;
+    const hasPrevious = leafState.visibleStart > 0;
+    const hasNext = leafState.visibleEnd < leafState.count - 1;
+    const previousTarget = Math.max(
+      0,
+      leafState.visibleStart - leafState.step
+    );
+    const nextTarget = Math.min(
+      leafState.count - 1,
+      leafState.visibleStart + leafState.step
+    );
     const previousLeafTitle = hasPrevious && paginator
-      ? paginator.titleAt(leafState.index - 1, pages[index])
+      ? paginator.titleAt(previousTarget, pages[index])
       : titleFor(index);
     const nextLeafTitle = hasNext && paginator
-      ? paginator.titleAt(leafState.index + 1, pages[index])
+      ? paginator.titleAt(nextTarget, pages[index])
       : titleFor(index);
+    const actionName = leafState.spread ? "펼침" : "페이지";
+    if (previousActionLabel) previousActionLabel.textContent = "이전 " + actionName;
+    if (nextActionLabel) nextActionLabel.textContent = "다음 " + actionName;
     previousButton.disabled = !hasPrevious;
     nextButton.disabled = !hasNext;
     if (edgePreviousButton && edgeNextButton) {
@@ -132,19 +172,19 @@
       edgePreviousButton.setAttribute(
         "aria-label",
         hasPrevious
-          ? "이전 쪽: " + previousLeafTitle + ", " + leafState.index + " / " + leafState.count
-          : "이전 쪽 없음"
+          ? "이전 " + actionName + ": " + previousLeafTitle
+          : "이전 " + actionName + " 없음"
       );
       edgeNextButton.setAttribute(
         "aria-label",
         hasNext
-          ? "다음 쪽: " + nextLeafTitle + ", " + (leafState.index + 2) + " / " + leafState.count
-          : "다음 쪽 없음"
+          ? "다음 " + actionName + ": " + nextLeafTitle
+          : "다음 " + actionName + " 없음"
       );
       edgePreviousButton.title =
-        hasPrevious ? "이전 쪽" : "이전 쪽 없음";
+        hasPrevious ? "이전 " + actionName : "이전 " + actionName + " 없음";
       edgeNextButton.title =
-        hasNext ? "다음 쪽" : "다음 쪽 없음";
+        hasNext ? "다음 " + actionName : "다음 " + actionName + " 없음";
     }
   }
 
@@ -212,13 +252,19 @@
       heading?.focus({ preventScroll: true });
     }
     scrollToPageStart();
+    const openState = paginator?.getState(pages[currentIndex]) || {
+      visibleStart: 0,
+      visibleEnd: 0,
+      count: 1
+    };
     announcer.textContent =
       "포트폴리오 노트를 열었습니다. " +
       titleFor(currentIndex) +
       ", " +
-      (currentLeafIndex + 1) +
-      " / " +
-      (paginator?.getState(pages[currentIndex]).count || 1);
+      spokenRangeLabel(openState) +
+      ", 전체 " +
+      openState.count +
+      "쪽";
   }
 
   function finishClosing(returnFocus) {
@@ -311,8 +357,11 @@
     const nextId = validPageId(id) || "profile";
     const nextIndex = pageIds.indexOf(nextId);
     const previousIndex = currentIndex;
-    const previousLeafIndex = currentLeafIndex;
+    const previousVisibleStart = paginator
+      ? paginator.getState(pages[currentIndex]).visibleStart
+      : currentLeafIndex;
     const categoryChanged = nextIndex !== currentIndex;
+    let activatedLeafState = null;
 
     if (categoryChanged) {
       pages.forEach((page, index) => {
@@ -324,13 +373,13 @@
     }
 
     if (paginator && isBookOpen) {
-      const leafState = categoryChanged
+      activatedLeafState = categoryChanged
         ? paginator.prepareAtAnchor(pages[nextIndex], anchor, leaf)
         : Number.isInteger(anchor)
           ? paginator.setAnchor(anchor)
           : paginator.setLeaf(leaf);
-      currentLeafIndex = leafState?.index || 0;
-      currentAnchorIndex = leafState?.anchor || 0;
+      currentLeafIndex = activatedLeafState?.index || 0;
+      currentAnchorIndex = activatedLeafState?.anchor || 0;
     } else {
       currentLeafIndex = typeof leaf === "number" ? Math.max(0, leaf) : 0;
       currentAnchorIndex = Number.isInteger(anchor) ? Math.max(0, anchor) : 0;
@@ -341,11 +390,15 @@
     if (
       animate &&
       isBookOpen &&
-      (categoryChanged || currentLeafIndex !== previousLeafIndex)
+      (categoryChanged ||
+        (activatedLeafState?.visibleStart ?? currentLeafIndex) !==
+          previousVisibleStart)
     ) {
       const direction =
         nextIndex < previousIndex ||
-        (nextIndex === previousIndex && currentLeafIndex < previousLeafIndex)
+        (nextIndex === previousIndex &&
+          (activatedLeafState?.visibleStart ?? currentLeafIndex) <
+            previousVisibleStart)
           ? "previous"
           : "next";
       playPageTurn(direction);
@@ -369,8 +422,8 @@
         ", " +
         leafState.title +
         ", " +
-        (leafState.index + 1) +
-        "쪽 / " +
+        spokenRangeLabel(leafState) +
+        ", 전체 " +
         leafState.count +
         "쪽";
     }
@@ -442,12 +495,24 @@
     if (!isBookOpen || !paginator || bookTransitioning) return;
     const state = paginator.getState(pages[currentIndex]);
     const targetIndex =
-      explicitIndex === null ? state.index + direction : explicitIndex;
+      explicitIndex === null
+        ? direction < 0
+          ? state.visibleStart - state.step
+          : state.visibleStart + state.step
+        : explicitIndex;
     if (targetIndex < 0 || targetIndex >= state.count || targetIndex === state.index) {
       return;
     }
 
-    if (pages[currentIndex].contains(document.activeElement)) {
+    const originatingControl = document.activeElement;
+    const pageControlFocused = [
+      previousButton,
+      nextButton,
+      edgePreviousButton,
+      edgeNextButton
+    ].includes(originatingControl);
+
+    if (!pageControlFocused && pages[currentIndex].contains(document.activeElement)) {
       pageStage.focus({ preventScroll: true });
     }
 
@@ -468,14 +533,27 @@
 
     playPageTurn(targetIndex < state.index ? "previous" : "next");
     updateNavigation(currentIndex);
-    pageStage.focus({ preventScroll: true });
+    if (pageControlFocused) {
+      if (originatingControl.disabled) {
+        const fallback = direction < 0
+          ? originatingControl === edgePreviousButton
+            ? edgeNextButton
+            : nextButton
+          : originatingControl === edgeNextButton
+            ? edgePreviousButton
+            : previousButton;
+        fallback?.focus({ preventScroll: true });
+      }
+    } else {
+      pageStage.focus({ preventScroll: true });
+    }
     announcer.textContent =
       titleFor(currentIndex) +
       ", " +
       nextState.title +
       ", " +
-      (nextState.index + 1) +
-      "쪽 / " +
+      spokenRangeLabel(nextState) +
+      ", 전체 " +
       nextState.count +
       "쪽";
   }
@@ -561,6 +639,28 @@
     syncingLocation = false;
   }
 
+  function rememberLeafInteraction(event) {
+    if (!isBookOpen || !paginator || printState) return;
+    const leaf = event.target.closest?.(".book-leaf:not([hidden])");
+    if (!leaf || !pages[currentIndex].contains(leaf)) return;
+    const leafIndex = Number.parseInt(leaf.dataset.leafIndex || "", 10);
+    if (!Number.isInteger(leafIndex)) return;
+
+    const state = paginator.setLeaf(leafIndex);
+    currentLeafIndex = state.index;
+    currentAnchorIndex = state.anchor;
+    history.replaceState(
+      {
+        view: "book",
+        page: pageIds[currentIndex],
+        leaf: currentLeafIndex,
+        anchor: currentAnchorIndex
+      },
+      "",
+      "#" + pageIds[currentIndex]
+    );
+  }
+
   allPageLinks.forEach((link) => {
     link.addEventListener("click", (event) => {
       if (
@@ -590,6 +690,8 @@
   nextButton.addEventListener("click", () => turnBookLeaf(1));
   edgePreviousButton?.addEventListener("click", () => turnBookLeaf(-1));
   edgeNextButton?.addEventListener("click", () => turnBookLeaf(1));
+  pageStage.addEventListener("focusin", rememberLeafInteraction);
+  pageStage.addEventListener("pointerdown", rememberLeafInteraction);
 
   window.addEventListener("popstate", () => {
     syncFromLocation({ animate: true, focus: true });
@@ -623,21 +725,24 @@
 
     const leafState = paginator?.getState(pages[currentIndex]) || {
       index: 0,
-      count: 1
+      count: 1,
+      visibleStart: 0,
+      visibleEnd: 0,
+      step: 1
     };
-    if (event.key === "ArrowLeft" && leafState.index > 0) {
+    if (event.key === "ArrowLeft" && leafState.visibleStart > 0) {
       event.preventDefault();
       turnBookLeaf(-1);
     }
-    if (event.key === "ArrowRight" && leafState.index < leafState.count - 1) {
+    if (event.key === "ArrowRight" && leafState.visibleEnd < leafState.count - 1) {
       event.preventDefault();
       turnBookLeaf(1);
     }
-    if (event.key === "Home" && leafState.index > 0) {
+    if (event.key === "Home" && leafState.visibleStart > 0) {
       event.preventDefault();
       turnBookLeaf(-1, 0);
     }
-    if (event.key === "End" && leafState.index < leafState.count - 1) {
+    if (event.key === "End" && leafState.visibleEnd < leafState.count - 1) {
       event.preventDefault();
       turnBookLeaf(1, leafState.count - 1);
     }
@@ -733,7 +838,7 @@
       if (!isBookOpen || !paginator || printState || pageStage.clientHeight === 0) {
         return;
       }
-      const leafState = paginator.repackActive();
+      const leafState = paginator.repackActive(currentAnchorIndex);
       currentLeafIndex = leafState?.index || 0;
       currentAnchorIndex = leafState?.anchor || 0;
       history.replaceState(
@@ -756,6 +861,7 @@
   } else {
     window.addEventListener("resize", scheduleRepagination);
   }
+  paginator?.onModeChange(scheduleRepagination);
 
   document.fonts?.ready.then(scheduleRepagination);
   portfolioImages.forEach((image) => {
