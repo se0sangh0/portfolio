@@ -11,6 +11,8 @@
   const allPageLinks = Array.from(document.querySelectorAll("[data-page-link]"));
   const previousButton = document.getElementById("previous-page");
   const nextButton = document.getElementById("next-page");
+  const edgePreviousButton = document.getElementById("edge-previous-page");
+  const edgeNextButton = document.getElementById("edge-next-page");
   const previousTitle = document.getElementById("previous-title");
   const nextTitle = document.getElementById("next-title");
   const pageCounter = document.getElementById("page-counter");
@@ -87,8 +89,30 @@
 
     previousButton.disabled = index === 0;
     nextButton.disabled = index === pages.length - 1;
+    if (edgePreviousButton && edgeNextButton) {
+      edgePreviousButton.disabled = index === 0;
+      edgeNextButton.disabled = index === pages.length - 1;
+    }
     previousTitle.textContent = index > 0 ? titleFor(index - 1) : "첫 기록";
     nextTitle.textContent = index < pages.length - 1 ? titleFor(index + 1) : "마지막 기록";
+    if (edgePreviousButton && edgeNextButton) {
+      edgePreviousButton.setAttribute(
+        "aria-label",
+        index > 0 ? "이전 기록: " + titleFor(index - 1) : "이전 기록 없음"
+      );
+      edgeNextButton.setAttribute(
+        "aria-label",
+        index < pages.length - 1
+          ? "다음 기록: " + titleFor(index + 1)
+          : "다음 기록 없음"
+      );
+      edgePreviousButton.title =
+        index > 0 ? "이전 기록: " + titleFor(index - 1) : "이전 기록 없음";
+      edgeNextButton.title =
+        index < pages.length - 1
+          ? "다음 기록: " + titleFor(index + 1)
+          : "다음 기록 없음";
+    }
   }
 
   function setBookBusy(busy) {
@@ -403,6 +427,8 @@
   closeNotebookButton.addEventListener("click", () => closeNotebook());
   previousButton.addEventListener("click", () => navigateTo(currentIndex - 1));
   nextButton.addEventListener("click", () => navigateTo(currentIndex + 1));
+  edgePreviousButton?.addEventListener("click", () => navigateTo(currentIndex - 1));
+  edgeNextButton?.addEventListener("click", () => navigateTo(currentIndex + 1));
 
   window.addEventListener("popstate", () => {
     syncFromLocation({ animate: true, focus: true });
@@ -497,6 +523,11 @@
   updateNavigation(currentIndex);
   if (initialPageId || (initialHash && !initialPageId)) {
     setBookOpen(true, { animate: false, focusHeading: false });
+    window.addEventListener(
+      "load",
+      () => window.requestAnimationFrame(scrollToPageStart),
+      { once: true }
+    );
   } else {
     setBookOpen(false, { animate: false, returnFocus: false });
   }
