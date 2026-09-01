@@ -14,6 +14,7 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
   <script>document.documentElement.classList.add("js");</script>
+  <script src="pagination.js" defer></script>
   <script src="app.js" defer></script>
   <title>서상호 | 게임·시스템 기획 포트폴리오</title>
 </head>
@@ -65,7 +66,7 @@
       <main class="page-stage" id="portfolio-content" tabindex="-1">
       <div class="page-stage__topline" aria-hidden="true">
         <span>INSPECTORATE · PORTFOLIO FILE</span>
-        <span id="page-counter">00 / 09</span>
+        <span id="page-counter"></span>
       </div>
       <nav class="page-edge-navigation" aria-label="책장 넘기기">
         <button class="page-edge-button page-edge-button--previous" id="edge-previous-page" type="button" aria-controls="portfolio-content" disabled>
@@ -725,9 +726,9 @@
         </section>
       </article>
 
-      <nav class="page-controls" aria-label="이전 및 다음 기록">
-        <button type="button" id="previous-page"><span aria-hidden="true">←</span><span><small>이전 기록</small><strong id="previous-title">없음</strong></span></button>
-        <button type="button" id="next-page"><span><small>다음 기록</small><strong id="next-title">역량과 기획 방식</strong></span><span aria-hidden="true">→</span></button>
+      <nav class="page-controls" aria-label="이전 및 다음 책장">
+        <button type="button" id="previous-page"><span aria-hidden="true">←</span><span><small>이전 페이지</small><strong id="previous-title">없음</strong></span></button>
+        <button type="button" id="next-page"><span><small>다음 페이지</small><strong id="next-title">역량과 기획 방식</strong></span><span aria-hidden="true">→</span></button>
       </nav>
       </main>
     </div>

@@ -7,6 +7,9 @@
   const closeNotebookButton = document.getElementById("close-notebook");
   const pageStage = document.querySelector(".page-stage");
   const pages = Array.from(document.querySelectorAll(".notebook-page"));
+  const portfolioImages = pages.flatMap((page) =>
+    Array.from(page.querySelectorAll("img"))
+  );
   const postitLinks = Array.from(document.querySelectorAll(".postit-nav [data-page-link]"));
   const allPageLinks = Array.from(document.querySelectorAll("[data-page-link]"));
   const previousButton = document.getElementById("previous-page");
@@ -31,6 +34,10 @@
   let bookTransitioning = false;
   let printState = null;
   let syncingLocation = false;
+  let currentLeafIndex = 0;
+  let currentAnchorIndex = 0;
+  let resizeTimer = 0;
+  let paginator = null;
 
   if (
     !bookIntro ||
@@ -41,6 +48,11 @@
     pages.length === 0
   ) {
     return;
+  }
+
+  if (typeof window.createPortfolioPaginator === "function") {
+    paginator = window.createPortfolioPaginator(pages);
+    document.documentElement.classList.add("paged-ready");
   }
 
   function decodedHash() {
@@ -73,6 +85,11 @@
 
   function updateNavigation(index) {
     const pageId = pageIds[index];
+    const leafState = paginator
+      ? paginator.getState(pages[index])
+      : { index: 0, count: 1, title: titleFor(index) };
+    currentLeafIndex = leafState.index;
+    currentAnchorIndex = leafState.anchor || 0;
 
     postitLinks.forEach((link) => {
       const isCurrent = link.getAttribute("href") === "#" + pageId;
@@ -81,37 +98,53 @@
     });
 
     pageCounter.textContent =
-      String(index).padStart(2, "0") +
+      String(index + 1).padStart(2, "0") +
       " / " +
-      String(pages.length - 1).padStart(2, "0");
+      String(pages.length).padStart(2, "0") +
+      " | " +
+      String(leafState.index + 1) +
+      " / " +
+      String(leafState.count);
     currentPageTitle.textContent = titleFor(index);
     document.title = isBookOpen ? titleFor(index) + " | 서상호 포트폴리오" : baseTitle;
 
-    previousButton.disabled = index === 0;
-    nextButton.disabled = index === pages.length - 1;
+    const hasPrevious = leafState.index > 0;
+    const hasNext = leafState.index < leafState.count - 1;
+    const previousLeafTitle = hasPrevious && paginator
+      ? paginator.titleAt(leafState.index - 1, pages[index])
+      : titleFor(index);
+    const nextLeafTitle = hasNext && paginator
+      ? paginator.titleAt(leafState.index + 1, pages[index])
+      : titleFor(index);
+    previousButton.disabled = !hasPrevious;
+    nextButton.disabled = !hasNext;
     if (edgePreviousButton && edgeNextButton) {
-      edgePreviousButton.disabled = index === 0;
-      edgeNextButton.disabled = index === pages.length - 1;
+      edgePreviousButton.disabled = !hasPrevious;
+      edgeNextButton.disabled = !hasNext;
     }
-    previousTitle.textContent = index > 0 ? titleFor(index - 1) : "첫 기록";
-    nextTitle.textContent = index < pages.length - 1 ? titleFor(index + 1) : "마지막 기록";
+    previousTitle.textContent = hasPrevious
+      ? previousLeafTitle
+      : "첫 페이지";
+    nextTitle.textContent = hasNext
+      ? nextLeafTitle
+      : "마지막 페이지";
     if (edgePreviousButton && edgeNextButton) {
       edgePreviousButton.setAttribute(
         "aria-label",
-        index > 0 ? "이전 기록: " + titleFor(index - 1) : "이전 기록 없음"
+        hasPrevious
+          ? "이전 쪽: " + previousLeafTitle + ", " + leafState.index + " / " + leafState.count
+          : "이전 쪽 없음"
       );
       edgeNextButton.setAttribute(
         "aria-label",
-        index < pages.length - 1
-          ? "다음 기록: " + titleFor(index + 1)
-          : "다음 기록 없음"
+        hasNext
+          ? "다음 쪽: " + nextLeafTitle + ", " + (leafState.index + 2) + " / " + leafState.count
+          : "다음 쪽 없음"
       );
       edgePreviousButton.title =
-        index > 0 ? "이전 기록: " + titleFor(index - 1) : "이전 기록 없음";
+        hasPrevious ? "이전 쪽" : "이전 쪽 없음";
       edgeNextButton.title =
-        index < pages.length - 1
-          ? "다음 기록: " + titleFor(index + 1)
-          : "다음 기록 없음";
+        hasNext ? "다음 쪽" : "다음 쪽 없음";
     }
   }
 
@@ -134,10 +167,14 @@
     );
     pageAnimationTimer = window.setTimeout(() => {
       pageStage.classList.remove("is-turning-next", "is-turning-previous");
-    }, 430);
+    }, 500);
   }
 
   function scrollToPageStart() {
+    if (paginator && document.documentElement.classList.contains("paged-ready")) {
+      window.scrollTo({ top: 0, behavior: "auto" });
+      return;
+    }
     const top = portfolioShell.getBoundingClientRect().top + window.scrollY;
     window.scrollTo({
       top: Math.max(0, top),
@@ -156,8 +193,22 @@
     document.body.classList.add("book-open");
     setBookBusy(false);
 
+    if (paginator) {
+      const leafState = paginator.prepareAtAnchor(
+        pages[currentIndex],
+        currentAnchorIndex,
+        currentLeafIndex
+      );
+      currentLeafIndex = leafState?.index || 0;
+      currentAnchorIndex = leafState?.anchor || 0;
+      updateNavigation(currentIndex);
+    }
+
     if (focusHeading) {
-      const heading = pages[currentIndex].querySelector("h1[tabindex='-1']");
+      const heading =
+        currentLeafIndex === 0
+          ? pages[currentIndex].querySelector("h1[tabindex='-1']")
+          : pageStage;
       heading?.focus({ preventScroll: true });
     }
     scrollToPageStart();
@@ -165,9 +216,9 @@
       "포트폴리오 노트를 열었습니다. " +
       titleFor(currentIndex) +
       ", " +
-      (currentIndex + 1) +
+      (currentLeafIndex + 1) +
       " / " +
-      pages.length;
+      (paginator?.getState(pages[currentIndex]).count || 1);
   }
 
   function finishClosing(returnFocus) {
@@ -253,18 +304,17 @@
     const {
       focusHeading = true,
       animate = true,
-      scroll = true,
-      announce = true
+      announce = true,
+      leaf = 0,
+      anchor = null
     } = options;
     const nextId = validPageId(id) || "profile";
     const nextIndex = pageIds.indexOf(nextId);
     const previousIndex = currentIndex;
-    const isSame =
-      nextIndex === currentIndex &&
-      pages[currentIndex] &&
-      !pages[currentIndex].hidden;
+    const previousLeafIndex = currentLeafIndex;
+    const categoryChanged = nextIndex !== currentIndex;
 
-    if (!isSame) {
+    if (categoryChanged) {
       pages.forEach((page, index) => {
         const active = index === nextIndex;
         page.hidden = !active;
@@ -273,22 +323,56 @@
       currentIndex = nextIndex;
     }
 
+    if (paginator && isBookOpen) {
+      const leafState = categoryChanged
+        ? paginator.prepareAtAnchor(pages[nextIndex], anchor, leaf)
+        : Number.isInteger(anchor)
+          ? paginator.setAnchor(anchor)
+          : paginator.setLeaf(leaf);
+      currentLeafIndex = leafState?.index || 0;
+      currentAnchorIndex = leafState?.anchor || 0;
+    } else {
+      currentLeafIndex = typeof leaf === "number" ? Math.max(0, leaf) : 0;
+      currentAnchorIndex = Number.isInteger(anchor) ? Math.max(0, anchor) : 0;
+    }
+
     updateNavigation(nextIndex);
 
-    if (animate && isBookOpen && !isSame) {
-      playPageTurn(nextIndex < previousIndex ? "previous" : "next");
+    if (
+      animate &&
+      isBookOpen &&
+      (categoryChanged || currentLeafIndex !== previousLeafIndex)
+    ) {
+      const direction =
+        nextIndex < previousIndex ||
+        (nextIndex === previousIndex && currentLeafIndex < previousLeafIndex)
+          ? "previous"
+          : "next";
+      playPageTurn(direction);
     }
 
     if (focusHeading && isBookOpen) {
-      const activeHeading = pages[nextIndex].querySelector("h1[tabindex='-1']");
-      window.requestAnimationFrame(() => activeHeading?.focus({ preventScroll: true }));
+      const focusTarget =
+        currentLeafIndex === 0
+          ? pages[nextIndex].querySelector("h1[tabindex='-1']")
+          : pageStage;
+      window.requestAnimationFrame(() => focusTarget?.focus({ preventScroll: true }));
     }
-    if (scroll && isBookOpen) {
-      window.requestAnimationFrame(scrollToPageStart);
-    }
-    if (announce && isBookOpen && !isSame) {
+    if (announce && isBookOpen) {
+      const leafState = paginator?.getState(pages[nextIndex]) || {
+        index: 0,
+        count: 1,
+        title: titleFor(nextIndex)
+      };
       announcer.textContent =
-        titleFor(nextIndex) + ", " + (nextIndex + 1) + " / " + pages.length;
+        titleFor(nextIndex) +
+        ", " +
+        leafState.title +
+        ", " +
+        (leafState.index + 1) +
+        "쪽 / " +
+        leafState.count +
+        "쪽";
     }
   }
 
@@ -297,28 +381,45 @@
     if (bookTransitioning) return;
     const id = pageIds[index];
     const openingFromCover = !isBookOpen;
+    const targetLeaf = Number.isInteger(options.leaf) ? options.leaf : 0;
+    const targetAnchor = Number.isInteger(options.anchor) ? options.anchor : 0;
 
-    if (isBookOpen && index === currentIndex) {
+    if (
+      isBookOpen &&
+      index === currentIndex &&
+      currentLeafIndex === targetLeaf &&
+      currentAnchorIndex === targetAnchor
+    ) {
       activatePage(id, {
         focusHeading: true,
         animate: false,
-        scroll: true,
-        announce: false
+        announce: false,
+        leaf: targetLeaf,
+        anchor: targetAnchor
       });
       return;
     }
 
     if (options.replace) {
-      history.replaceState({ view: "book", page: id }, "", "#" + id);
+      history.replaceState(
+        { view: "book", page: id, leaf: targetLeaf, anchor: targetAnchor },
+        "",
+        "#" + id
+      );
     } else {
-      history.pushState({ view: "book", page: id }, "", "#" + id);
+      history.pushState(
+        { view: "book", page: id, leaf: targetLeaf, anchor: targetAnchor },
+        "",
+        "#" + id
+      );
     }
 
     activatePage(id, {
       focusHeading: false,
       animate: !openingFromCover,
-      scroll: !openingFromCover,
-      announce: !openingFromCover
+      announce: !openingFromCover,
+      leaf: targetLeaf,
+      anchor: targetAnchor
     });
 
     if (openingFromCover) {
@@ -330,10 +431,53 @@
       activatePage(id, {
         focusHeading: true,
         animate: false,
-        scroll: true,
-        announce: false
+        announce: false,
+        leaf: targetLeaf,
+        anchor: targetAnchor
       });
     }
+  }
+
+  function turnBookLeaf(direction, explicitIndex = null) {
+    if (!isBookOpen || !paginator || bookTransitioning) return;
+    const state = paginator.getState(pages[currentIndex]);
+    const targetIndex =
+      explicitIndex === null ? state.index + direction : explicitIndex;
+    if (targetIndex < 0 || targetIndex >= state.count || targetIndex === state.index) {
+      return;
+    }
+
+    if (pages[currentIndex].contains(document.activeElement)) {
+      pageStage.focus({ preventScroll: true });
+    }
+
+    const nextState = paginator.setLeaf(targetIndex);
+    currentLeafIndex = nextState.index;
+    currentAnchorIndex = nextState.anchor;
+
+    history.pushState(
+      {
+        view: "book",
+        page: pageIds[currentIndex],
+        leaf: nextState.index,
+        anchor: nextState.anchor
+      },
+      "",
+      "#" + pageIds[currentIndex]
+    );
+
+    playPageTurn(targetIndex < state.index ? "previous" : "next");
+    updateNavigation(currentIndex);
+    pageStage.focus({ preventScroll: true });
+    announcer.textContent =
+      titleFor(currentIndex) +
+      ", " +
+      nextState.title +
+      ", " +
+      (nextState.index + 1) +
+      "쪽 / " +
+      nextState.count +
+      "쪽";
   }
 
   function closeNotebook(options = {}) {
@@ -342,7 +486,12 @@
 
     if (pushHistory) {
       history.pushState(
-        { view: "cover", page: pageIds[currentIndex] },
+        {
+          view: "cover",
+          page: pageIds[currentIndex],
+          leaf: currentLeafIndex,
+          anchor: currentAnchorIndex
+        },
         "",
         cleanUrl()
       );
@@ -361,12 +510,17 @@
     const pageId = validPageId(hashValue);
 
     if (hashValue && !pageId) {
-      history.replaceState({ view: "book", page: "profile" }, "", "#profile");
+      history.replaceState(
+        { view: "book", page: "profile", leaf: 0, anchor: 0 },
+        "",
+        "#profile"
+      );
       activatePage("profile", {
         focusHeading: false,
         animate: false,
-        scroll: false,
-        announce: false
+        announce: false,
+        leaf: 0,
+        anchor: 0
       });
       setBookOpen(true, {
         animate: options.animate ?? true,
@@ -378,11 +532,18 @@
 
     if (pageId) {
       const wasOpen = isBookOpen;
+      const requestedLeaf = Number.isInteger(history.state?.leaf)
+        ? history.state.leaf
+        : 0;
+      const requestedAnchor = Number.isInteger(history.state?.anchor)
+        ? history.state.anchor
+        : null;
       activatePage(pageId, {
         focusHeading: wasOpen && (options.focus ?? true),
         animate: wasOpen && (options.animate ?? true),
-        scroll: wasOpen,
-        announce: wasOpen
+        announce: wasOpen,
+        leaf: requestedLeaf,
+        anchor: requestedAnchor
       });
       if (!wasOpen) {
         setBookOpen(true, {
@@ -425,10 +586,10 @@
 
   openNotebookButton.addEventListener("click", () => navigateTo(currentIndex));
   closeNotebookButton.addEventListener("click", () => closeNotebook());
-  previousButton.addEventListener("click", () => navigateTo(currentIndex - 1));
-  nextButton.addEventListener("click", () => navigateTo(currentIndex + 1));
-  edgePreviousButton?.addEventListener("click", () => navigateTo(currentIndex - 1));
-  edgeNextButton?.addEventListener("click", () => navigateTo(currentIndex + 1));
+  previousButton.addEventListener("click", () => turnBookLeaf(-1));
+  nextButton.addEventListener("click", () => turnBookLeaf(1));
+  edgePreviousButton?.addEventListener("click", () => turnBookLeaf(-1));
+  edgeNextButton?.addEventListener("click", () => turnBookLeaf(1));
 
   window.addEventListener("popstate", () => {
     syncFromLocation({ animate: true, focus: true });
@@ -460,25 +621,38 @@
       return;
     }
 
-    let targetIndex = currentIndex;
-    if (event.key === "ArrowLeft") targetIndex -= 1;
-    if (event.key === "ArrowRight") targetIndex += 1;
-    if (event.key === "Home") targetIndex = 0;
-    if (event.key === "End") targetIndex = pages.length - 1;
-    if (targetIndex === currentIndex || targetIndex < 0 || targetIndex >= pages.length) {
-      return;
+    const leafState = paginator?.getState(pages[currentIndex]) || {
+      index: 0,
+      count: 1
+    };
+    if (event.key === "ArrowLeft" && leafState.index > 0) {
+      event.preventDefault();
+      turnBookLeaf(-1);
     }
-
-    event.preventDefault();
-    navigateTo(targetIndex);
+    if (event.key === "ArrowRight" && leafState.index < leafState.count - 1) {
+      event.preventDefault();
+      turnBookLeaf(1);
+    }
+    if (event.key === "Home" && leafState.index > 0) {
+      event.preventDefault();
+      turnBookLeaf(-1, 0);
+    }
+    if (event.key === "End" && leafState.index < leafState.count - 1) {
+      event.preventDefault();
+      turnBookLeaf(1, leafState.count - 1);
+    }
   });
 
   window.addEventListener("beforeprint", () => {
     printState = {
       isBookOpen,
       introHidden: bookIntro.hidden,
-      shellHidden: portfolioShell.hidden
+      shellHidden: portfolioShell.hidden,
+      page: currentIndex,
+      leaf: currentLeafIndex,
+      anchor: currentAnchorIndex
     };
+    paginator?.preparePrint();
     bookIntro.hidden = true;
     portfolioShell.hidden = false;
     portfolioShell.inert = false;
@@ -495,6 +669,17 @@
       bookIntro.hidden = printState.introHidden;
       portfolioShell.hidden = printState.shellHidden;
       portfolioShell.inert = !printState.isBookOpen;
+      currentIndex = printState.page;
+      currentLeafIndex = printState.leaf;
+      currentAnchorIndex = printState.anchor;
+      if (printState.isBookOpen) {
+        paginator?.restoreAfterPrint(
+          pages[currentIndex],
+          currentLeafIndex,
+          currentAnchorIndex
+        );
+      }
+      updateNavigation(currentIndex);
     }
     printState = null;
   });
@@ -503,18 +688,28 @@
   const initialPageId = validPageId(initialHash);
 
   if (initialHash && !initialPageId) {
-    history.replaceState({ view: "book", page: "profile" }, "", "#profile");
+    history.replaceState(
+      { view: "book", page: "profile", leaf: 0, anchor: 0 },
+      "",
+      "#profile"
+    );
   } else if (!history.state) {
     history.replaceState(
       initialPageId
-        ? { view: "book", page: initialPageId }
-        : { view: "cover", page: "profile" },
+        ? { view: "book", page: initialPageId, leaf: 0, anchor: 0 }
+        : { view: "cover", page: "profile", leaf: 0, anchor: 0 },
       "",
       initialPageId ? "#" + initialPageId : cleanUrl()
     );
   }
 
   currentIndex = initialPageId ? pageIds.indexOf(initialPageId) : 0;
+  currentLeafIndex = Number.isInteger(history.state?.leaf)
+    ? history.state.leaf
+    : 0;
+  currentAnchorIndex = Number.isInteger(history.state?.anchor)
+    ? history.state.anchor
+    : 0;
   pages.forEach((page, index) => {
     page.hidden = index !== currentIndex;
     page.classList.toggle("is-active", index === currentIndex);
@@ -531,6 +726,44 @@
   } else {
     setBookOpen(false, { animate: false, returnFocus: false });
   }
+
+  function scheduleRepagination() {
+    window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(() => {
+      if (!isBookOpen || !paginator || printState || pageStage.clientHeight === 0) {
+        return;
+      }
+      const leafState = paginator.repackActive();
+      currentLeafIndex = leafState?.index || 0;
+      currentAnchorIndex = leafState?.anchor || 0;
+      history.replaceState(
+        {
+          view: "book",
+          page: pageIds[currentIndex],
+          leaf: currentLeafIndex,
+          anchor: currentAnchorIndex
+        },
+        "",
+        "#" + pageIds[currentIndex]
+      );
+      updateNavigation(currentIndex);
+    }, 80);
+  }
+
+  if ("ResizeObserver" in window) {
+    const resizeObserver = new ResizeObserver(scheduleRepagination);
+    resizeObserver.observe(pageStage);
+  } else {
+    window.addEventListener("resize", scheduleRepagination);
+  }
+
+  document.fonts?.ready.then(scheduleRepagination);
+  portfolioImages.forEach((image) => {
+    if (!image.complete) {
+      image.addEventListener("load", scheduleRepagination, { once: true });
+      image.addEventListener("error", scheduleRepagination, { once: true });
+    }
+  });
 
   document.documentElement.classList.add("portfolio-ready");
 })();

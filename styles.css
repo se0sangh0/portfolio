@@ -2651,6 +2651,427 @@ html:not(.js) .page-edge-navigation {
   }
 }
 
+/* ===== Chapter pagination: one viewport, multiple book leaves ===== */
+
+.paged-ready body.book-open {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+.paged-ready body.book-open .portfolio-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
+}
+
+.paged-ready body.book-open .open-toolbar {
+  flex: 0 0 auto;
+}
+
+.paged-ready body.book-open .open-notebook {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.paged-ready body.book-open .page-stage {
+  --book-topline-height: 53px;
+  --book-controls-height: 64px;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.paged-ready body.book-open .page-stage__topline {
+  height: var(--book-topline-height);
+}
+
+.paged-ready body.book-open .page-edge-navigation {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.paged-ready body.book-open .notebook-page {
+  height: calc(100% - var(--book-topline-height) - var(--book-controls-height));
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.paged-ready body.book-open .book-leaf {
+  position: absolute;
+  inset: 0;
+  padding:
+    clamp(24px, 4vh, 40px)
+    clamp(42px, 5.4vw, 82px)
+    clamp(22px, 3.4vh, 36px)
+    clamp(50px, 6vw, 92px);
+  overflow: hidden;
+  background: transparent;
+}
+
+.paged-ready body.book-open .book-leaf[hidden] {
+  display: none;
+}
+
+.paged-ready body.book-open .book-leaf--scrollable {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-color: rgba(10, 116, 57, 0.42) transparent;
+  scrollbar-width: thin;
+}
+
+.paged-ready body.book-open .book-page-unit {
+  margin-top: 0 !important;
+  margin-bottom: clamp(20px, 3.4vh, 34px) !important;
+}
+
+.paged-ready body.book-open .book-leaf > .book-page-unit:last-child {
+  margin-bottom: 0 !important;
+}
+
+.paged-ready body.book-open .book-leaf > .project-hero {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  margin: 0 !important;
+}
+
+.paged-ready body.book-open .book-fragment,
+.paged-ready body.book-open .book-fragment--single,
+.paged-ready body.book-open .book-fragment--case,
+.paged-ready body.book-open .book-fragment--media,
+.paged-ready body.book-open .book-fragment--contact,
+.paged-ready body.book-open .book-fragment--contact-links {
+  margin-top: 0 !important;
+}
+
+.paged-ready body.book-open .book-fragment--single,
+.paged-ready body.book-open .book-fragment--case,
+.paged-ready body.book-open .book-fragment--media,
+.paged-ready body.book-open .book-fragment--contact,
+.paged-ready body.book-open .book-fragment--contact-links,
+.paged-ready body.book-open .book-fragment-grid--single {
+  display: block !important;
+}
+
+.paged-ready body.book-open .book-fragment-heading {
+  margin: 0 0 clamp(18px, 3vh, 28px);
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.paged-ready body.book-open .book-fragment-heading h2 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(1.5rem, 2.6vw, 2.35rem);
+  line-height: 1.2;
+}
+
+.paged-ready body.book-open
+  .book-page-unit--same-title > .book-fragment-heading:first-child {
+  display: none;
+}
+
+.paged-ready body.book-open .book-fragment.method-strip {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.paged-ready body.book-open .book-fragment.capability-ledger > div {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.paged-ready body.book-open .book-fragment.capability-ledger .line-list li {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.paged-ready body.book-open ol.book-fragment-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.paged-ready body.book-open .book-fragment-grid.system-flow {
+  grid-template-columns: repeat(3, 1fr) !important;
+}
+
+.paged-ready body.book-open .book-fragment-grid.atlas-grid {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.paged-ready body.book-open .book-fragment-grid.atlas-grid a {
+  grid-column: auto !important;
+  min-height: 136px;
+  border-top: 0;
+}
+
+.paged-ready body.book-open .book-fragment-grid.media-grid {
+  display: block;
+}
+
+.paged-ready body.book-open .book-fragment-grid.media-grid figure {
+  margin: 0;
+}
+
+.paged-ready body.book-open .book-fragment-grid.media-grid img,
+.paged-ready body.book-open .book-fragment--media img {
+  width: 100%;
+  height: min(33dvh, 290px);
+  object-fit: contain;
+}
+
+.paged-ready body.book-open .book-fragment-grid.document-grid {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.paged-ready body.book-open .book-fragment-grid.document-grid img {
+  width: 100%;
+  height: min(34dvh, 250px);
+  object-fit: contain;
+}
+
+.paged-ready body.book-open .book-fragment--case > .case-points {
+  margin-top: 0;
+}
+
+.paged-ready body.book-open .book-fragment--media figure {
+  max-width: min(100%, 760px);
+  margin: 0 auto;
+}
+
+.paged-ready body.book-open .record-heading {
+  padding-bottom: clamp(22px, 3vh, 34px);
+}
+
+.paged-ready body.book-open .record-heading h1,
+.paged-ready body.book-open .project-hero h1 {
+  font-size: clamp(2.5rem, 5vw, 4.8rem);
+}
+
+.paged-ready body.book-open .record-heading--profile h1 {
+  font-size: clamp(2.8rem, 5.8vw, 5.4rem);
+}
+
+.paged-ready body.book-open .record-lead {
+  margin-top: clamp(18px, 2.4vh, 28px);
+  font-size: clamp(1rem, 1.35vw, 1.16rem);
+}
+
+.paged-ready body.book-open .section-heading {
+  margin-bottom: clamp(20px, 3vh, 32px);
+}
+
+.paged-ready body.book-open .page-turn-sheet {
+  top: var(--book-topline-height);
+  bottom: var(--book-controls-height);
+  height: auto;
+}
+
+.paged-ready body.book-open .page-stage.is-turning-next .page-turn-sheet {
+  animation: paged-turn-next 460ms cubic-bezier(0.45, 0, 0.2, 1) both;
+}
+
+.paged-ready body.book-open .page-stage.is-turning-previous .page-turn-sheet {
+  animation: paged-turn-previous 460ms cubic-bezier(0.45, 0, 0.2, 1) both;
+}
+
+@keyframes paged-turn-next {
+  0% { opacity: 0; transform: rotateY(0deg) translateX(0); }
+  16% { opacity: 0.88; }
+  100% { opacity: 0; transform: rotateY(-72deg) translateX(-10%); }
+}
+
+@keyframes paged-turn-previous {
+  0% { opacity: 0; transform: rotateY(0deg) translateX(0); }
+  16% { opacity: 0.88; }
+  100% { opacity: 0; transform: rotateY(72deg) translateX(10%); }
+}
+
+.paged-ready body.book-open .page-controls {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 26;
+  height: var(--book-controls-height);
+}
+
+.paged-ready body.book-open .page-controls button {
+  min-height: var(--book-controls-height);
+}
+
+.paged-ready body.book-open .postit-nav {
+  position: relative;
+  top: 0;
+  max-height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+@media (max-width: 767px) {
+  .paged-ready body.book-open .portfolio-shell {
+    padding-bottom: 4px;
+  }
+
+  .paged-ready body.book-open .page-stage {
+    --book-controls-height: 56px;
+  }
+
+  .paged-ready body.book-open .page-edge-navigation {
+    top: 0;
+    transform: none;
+  }
+
+  .paged-ready body.book-open .notebook-page {
+    padding: 0;
+  }
+
+  .paged-ready body.book-open .book-leaf {
+    padding: 20px 18px 18px 40px;
+  }
+
+  .paged-ready body.book-open .page-controls button {
+    min-height: 56px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  .paged-ready body.book-open .page-controls strong {
+    display: block;
+  }
+}
+
+@media (max-width: 390px) {
+  .paged-ready body.book-open .notebook-page {
+    padding: 0;
+  }
+
+  .paged-ready body.book-open .book-leaf {
+    padding: 10px 14px 10px 40px;
+  }
+
+  .paged-ready body.book-open .book-fragment--record-title h1 {
+    font-size: clamp(1.85rem, 9.5vw, 2.5rem);
+    line-height: 1.06;
+  }
+
+  .paged-ready body.book-open .book-fragment--record-title .record-kicker {
+    margin-bottom: 5px;
+  }
+
+  .paged-ready body.book-open .book-fragment--record-intro .record-lead {
+    margin-top: 0;
+    font-size: 0.94rem;
+    line-height: 1.55;
+  }
+
+  .paged-ready body.book-open .book-fragment--record-intro .profile-signature {
+    margin-top: 20px;
+  }
+
+  .paged-ready body.book-open .book-fragment--case h2 {
+    margin-bottom: 4px;
+  }
+
+  .paged-ready body.book-open .book-fragment--case > p:not(.section-label) {
+    margin-bottom: 10px;
+  }
+
+  .paged-ready body.book-open .book-fragment--case dl {
+    font-size: 0.82rem;
+  }
+
+  .paged-ready body.book-open .book-fragment.activity-feature .check-list li {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  .paged-ready body.book-open .book-fragment.activity-feature--global h2 {
+    margin-bottom: 8px;
+    font-size: 1.65rem;
+  }
+
+  .paged-ready body.book-open .book-fragment.activity-feature--global p {
+    margin-bottom: 0;
+    font-size: 0.9rem;
+  }
+
+  .paged-ready body.book-open .book-fragment--contact {
+    padding: 22px !important;
+  }
+
+  .paged-ready body.book-open .book-fragment--contact h2 {
+    font-size: 1.8rem;
+  }
+
+  .paged-ready body.book-open .book-fragment-grid.document-grid img {
+    height: min(26dvh, 150px);
+  }
+
+  .paged-ready body.book-open .page-controls strong {
+    max-width: 15ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 767px) and (max-height: 520px) {
+  .paged-ready body.book-open .page-stage {
+    --book-topline-height: 46px;
+    --book-controls-height: 46px;
+  }
+
+  .paged-ready body.book-open .open-toolbar {
+    min-height: 46px;
+  }
+
+  .paged-ready body.book-open .notebook-page {
+    padding: 0;
+  }
+
+  .paged-ready body.book-open .book-leaf {
+    padding: 10px 12px 10px 38px;
+  }
+
+  .paged-ready body.book-open .book-fragment--record-title h1 {
+    font-size: clamp(1.45rem, 6vw, 1.9rem);
+    line-height: 1.04;
+  }
+
+  .paged-ready body.book-open .page-controls button {
+    min-height: 46px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+}
+
+@media print {
+  .paged-ready body.book-open,
+  .paged-ready body.book-open .portfolio-shell,
+  .paged-ready body.book-open .open-notebook,
+  .paged-ready body.book-open .page-stage,
+  .paged-ready body.book-open .notebook-page {
+    display: block !important;
+    width: auto;
+    height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .paged-ready body.book-open .book-leaf,
+  .paged-ready body.book-open .book-leaf[hidden] {
+    position: static;
+    display: block !important;
+    padding: 0;
+    overflow: visible;
+  }
+}
+
 /* ===== Closed notebook entrance and side post-it index ===== */
 
 .book-intro,
