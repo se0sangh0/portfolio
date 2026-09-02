@@ -4046,6 +4046,28 @@ html:not(.js) .open-toolbar {
   display: flow-root;
 }
 
+/* Fragment shells keep the full section padding of the scrolling document.
+   Inside the book each fragment already owns a page, so the outer gap is cut
+   to a bounded value. Titles, heroes, media and certificates keep theirs. */
+.paged-ready body.book-open .book-fragment--case,
+.paged-ready body.book-open .book-fragment.activity-feature,
+.paged-ready body.book-open .book-fragment.privacy-note {
+  padding-top: clamp(12px, 2vh, 20px);
+  padding-bottom: clamp(12px, 2vh, 20px);
+}
+
+/* Detail cards are one per page here, so their card padding is capped too. */
+.paged-ready body.book-open .book-fragment .detail-ledger__grid > article,
+.paged-ready body.book-open .book-fragment .decision-grid > article,
+.paged-ready body.book-open .book-fragment .ownership-list > li,
+.paged-ready body.book-open
+  .book-fragment.learning-grid > div:not(.section-heading),
+.paged-ready body.book-open .book-fragment.boundary-grid > div,
+.paged-ready body.book-open .book-fragment.verification-band > div {
+  padding-top: clamp(12px, 2vh, 20px);
+  padding-bottom: clamp(12px, 2vh, 20px);
+}
+
 @media (min-width: 768px) and (min-height: 761px) {
   .paged-ready body.book-open .book-page-unit {
     margin-bottom: clamp(16px, 2vh, 20px) !important;

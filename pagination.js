@@ -558,13 +558,18 @@
       );
     }
 
+    function continuesTitle(title, previousTitle) {
+      if (!title || !previousTitle) return false;
+      return title === previousTitle || title === previousTitle + " 계속";
+    }
+
     function refreshContinuationHeadings(leaf) {
       let previousTitle = "";
       Array.from(leaf.children).forEach((unit) => {
         const title = unit.dataset.bookUnitTitle || "";
         unit.classList.toggle(
           "book-page-unit--same-title",
-          Boolean(title && title === previousTitle)
+          continuesTitle(title, previousTitle)
         );
         previousTitle = title;
       });
