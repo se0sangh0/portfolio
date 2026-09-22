@@ -1030,6 +1030,14 @@ em {
   color: var(--green-bright);
 }
 
+.milestone-context {
+  position: relative;
+  z-index: 1;
+  margin: 18px 0 0;
+  font-size: 0.8rem;
+  line-height: 1.65;
+}
+
 .design-note,
 .archive-details {
   margin-top: clamp(48px, 7vw, 84px);
@@ -1547,7 +1555,8 @@ em {
   border-top: 2px solid var(--ink);
 }
 
-.award-row time {
+.award-row time,
+.award-row .award-year {
   color: var(--green);
   font-family: var(--mono);
   font-size: 0.73rem;
